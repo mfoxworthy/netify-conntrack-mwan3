@@ -1,7 +1,7 @@
 # netify-conntrack-mwan3
 Netfilter conntrack reset function to solve misplaced flows after application detection
 
-# Intoduction
+# Introduction
 
 Netify and mwan3 are tools used in OpenWRT to provide an SD-WAN solution. Netify provides application detection and classification. mwan3 provides networking funtions such as link health detection, forwarding rules and classification. Together, a comprehensive SD-WAN solution with edge DPI functionality can be built. One drawback is that DPI sometimes takes several packets before an application can be identified. In these cases the connection could be made on the incorrect interface thus not creating the user experience desired.
 
