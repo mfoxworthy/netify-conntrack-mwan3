@@ -9,7 +9,7 @@ function sleep (n)
     end
 end
 
-local conncmd = 'conntrack -E | grep NEW | grep tcp | awk \'{print $7 \" \" $16}\''
+local conncmd = 'conntrack -E | grep NEW | grep tcp | awk \'{print $7 \" \" $15}\''
 local pipeout = assert(io.popen(conncmd, 'w'))
 
 while true do
