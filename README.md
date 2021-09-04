@@ -5,6 +5,12 @@ Netfilter conntrack reset function to solve misplaced flows after application de
 
 Netify and mwan3 are tools used in OpenWRT to provide an SD-WAN solution. Netify provides application detection and classification. mwan3 provides networking funtions such as link health detection, forwarding rules and classification. Together, a comprehensive SD-WAN solution with edge DPI functionality can be built. One drawback is that DPI sometimes takes several packets before an application can be identified. In these cases the connection could be made on the incorrect interface thus not creating the user experience desired.
 
+# Netify
+
+Netify - Netify uses nDPI under the covers but they have a plugin that is required to perform the ipset function. This isn't public and may cost some money to use. Contact the fine folks over at Netify by visiting their website at www.netify.ai
+
+While you are there, take some time to look at their analytics tools. Extremly impressive and is resonable for enterprise implementations.
+
 # Proposed solution
 
 This project is being developed to solve what is called the "first packet detecion" issue. In prelinary tests we've proven that deleting the connection in the netfilter connection tracking list will force TCP to send a reset flag to both sides of the NAT and UDP will just create a new tracking entry.
