@@ -1,3 +1,5 @@
+My first version - 0.1
+
 # netify-conntrack-mwan3
 Netfilter conntrack reset function to solve misplaced flows after application detection
 
