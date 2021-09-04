@@ -33,7 +33,7 @@ The idea is to create a named pipe and pump new connection information into the 
 What I have done is used the "conntrack -E" command to provide a continuous event list with conntrack events.
   
   Example:
-  root@GL-X750:~# conntrack -E
+  "root@GL-X750:~# conntrack -E
 [DESTROY] udp      17 src=192.168.88.62 dst=8.8.8.8 sport=52725 dport=53 packets=1 bytes=86 src=8.8.8.8 dst=192.168.88.62 sport=53 dport=52725 packets=1 bytes=134 mark=256
  [UPDATE] tcp      6 10 CLOSE src=192.168.88.62 dst=35.182.46.62 sport=42350 dport=443 src=35.182.46.62 dst=192.168.88.62 sport=443 dport=42350 [ASSURED] mark=256
     [NEW] tcp      6 120 SYN_SENT src=192.168.88.62 dst=35.182.46.62 sport=42352 dport=443 [UNREPLIED] src=35.182.46.62 dst=192.168.88.62 sport=443 dport=42352 mark=256
@@ -52,7 +52,7 @@ What I have done is used the "conntrack -E" command to provide a continuous even
 [DESTROY] udp      17 src=192.168.8.108 dst=192.168.8.1 sport=56989 dport=53 packets=1 bytes=86 src=192.168.8.1 dst=192.168.8.108 sport=53 dport=56989 packets=1 bytes=134 mark=16128
 [DESTROY] udp      17 src=192.168.88.62 dst=172.26.38.1 sport=52725 dport=53 packets=1 bytes=86 [UNREPLIED] src=172.26.38.1 dst=192.168.88.62 sport=53 dport=52725 packets=0 bytes=0 mark=256
 [DESTROY] icmp     1 src=192.168.88.62 dst=8.8.4.4 type=8 code=0 id=21996 packets=1 bytes=84 src=8.8.4.4 dst=192.168.88.62 type=0 code=0 id=21996 packets=1 bytes=84 mark=256
-^Cconntrack v1.4.5 (conntrack-tools): 18 flow events have been shown.
+^Cconntrack v1.4.5 (conntrack-tools): 18 flow events have been shown."
   
 All the entries with [NEW] flagged are what we are interested in. The entries with a dst containing a directly connected network we throw out. We record two items in each entry, the outbound dst IP, which is the first one in the entry and the mark at the end. We send these two items to the named pipe. We then build a listener on the named pipe that uses each new entry to run through a decision tree. First, we evaluate the mark to determine which interface this connection is established on. We then read our interface map var to determine which set the dst IP has been added to. It's worth mentioning that right now I am only using hash:ip sets. I am not using hash:ip:port sets. This being said, if we have back to back conntracks with the same IP we only need to process one of them. We should be setting a var with the previous IP and a timer. This will reduce the amount of ipset list commands we have to issue. The timer is useful in very quiet networks. For example, if we get two identical IPs but they are 10 minutes apart, it's likely the ipset entry has aged. So, when we look up the IP in the set we should also use the timeout value that is contained in the ipset to set our timer. I know, I know, "But what if we get two identical IPs, say, 3 or 4 apart?". That is anoptimization and if anyone wants to chime in on a data structure we can use that can speed things up, I'm all ears.  
 
