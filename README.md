@@ -74,6 +74,9 @@ We need two functions with thier own fork and PID.
   2. The entry manager that listens to the named pipe and performs the delte function.
   
 This does'nt need to be high speed. In fact we may actually want to sit a few seconds behind each new flow. When the new connection is added to the nf_conntrack file, it happens at the 3-way handshake. We may not have an IPSET set entry for a few packets. Maybe we build a short queue with a wait funtion? Maybe we sit on the ipset lists and match IP addresses as they are added? Thoughts? Just so their are few assumptions, when we get a connection that is on the correct interface, we do nothing. If we get a connection that is not in any set, we do nothing. 
+
+# Required Packages - OpenWRT
   
+opkg install conntrack ipset lua
 
 
