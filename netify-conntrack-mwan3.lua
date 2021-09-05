@@ -28,15 +28,15 @@ end
 
 -- Function to get iptables rules
 
-function fetchrules()
-  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
-  local getrules = assert(io.popen(rulescmd, 'r'))
-  rules = {}
-  for rule in getrules:lines() do
-    table.insert(rules, rule)
+function fetchpolicy()
+  local polcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
+  local getpols = assert(io.popen(polcmd, 'r'))
+  pols = {}
+  for policy in getpols:lines() do
+    table.insert(pols, policy)
   end
-  getrules:flush()
-  getrules:close()
+  getpols:flush()
+  getpols:close()
   return rules
 end
 
@@ -57,7 +57,7 @@ function fetchmarks()
   m = os.execute('iptables -L ' .. policy .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5')
   marks = {}
   for mark in policy do
-    table.insert(marks, mark)
+    table.insert(policy, mark)
   end
   return marks
 end
@@ -98,7 +98,7 @@ function pipeconntrack()
 end
 
 
-ruleset = fetchrules()
+policy = fetchpolicy()
 ipsets = fetchipsets()
 
 for i,v in ipairs(ruleset) do print(v) end
