@@ -10,13 +10,14 @@ function sleep (n)
 end
 
 local conncmd = 'conntrack -E | grep NEW | grep \'tcp|udp\''
-local pipeout = assert(io.popen(conncmd, 'w'))
+--local pipeout = assert(io.popen(conncmd, 'w'))
+local pipein  = assert(io.popen(conncmd,  'r'))
 
 while true do
     
-    s = pipeout:read()
+    for line in pipein:lines() do
     words = {}
-      for w in s:gmatch("%w+") do 
+      for w in line:gmatch("%w+") do 
         table.insert(words, w) 
       end
 
@@ -25,10 +26,8 @@ while true do
     for k, v in ipairs (words) do
       print (v)
     end -- for
-    -- pipeout:write()
-    pipeout:flush()
     
    
 end
 
-pipeout:close()
+pipein:close()
