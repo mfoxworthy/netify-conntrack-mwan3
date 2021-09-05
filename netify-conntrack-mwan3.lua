@@ -50,10 +50,11 @@ for line in pipein:lines() do
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
       then
         if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
-          print(conn_arr [8])
-          dst_IP = string.gsub(conn_arr [6], "dst%=", "")
-          print(dst_IP)
-          print(line)
+          then
+            print(conn_arr [8])
+            dst_IP = string.gsub(conn_arr [6], "dst%=", "")
+            print(dst_IP)
+            print(line)
         end
   end
   pipein:flush()
