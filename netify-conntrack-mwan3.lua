@@ -66,7 +66,8 @@ for line in pipein:lines() do
      then
        
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-      mark = 
+      mark = fetchrules()
+      print(mark)
       -- print("tcp flow ", dst_IP)
       --reset(dst_IP)
       
