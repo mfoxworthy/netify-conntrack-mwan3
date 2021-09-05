@@ -16,18 +16,19 @@ local pipein  = assert(io.popen(conncmd,  'r'))
 while true do
     
     for line in pipein:lines() do
-    words = {}
-      for w in line:gmatch("%w+") do 
-        table.insert(words, w) 
-      end
+      words = {}
+        for w in line:gmatch("%w+") do 
+          table.insert(words, w) 
+        end
 
 --print (words [2]) --> is
 
-    for k, v in ipairs (words) do
-      print (v)
-    end -- for
+      for k, v in ipairs (words) do
+        print (v)
+      end -- for
+      
+    end
     
-   
 end
 
 pipein:close()
