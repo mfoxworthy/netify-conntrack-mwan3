@@ -16,7 +16,6 @@ end
 
 local conncmd = 'conntrack -E'
 local pipein  = assert(io.popen(conncmd,  'r'))
-local reset = "conntrack -D -d"
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
@@ -32,6 +31,11 @@ function split (line)
 
 end
 
+function reset (dst_IP)
+  local reset = "conntrack -D -d " .. dst_IP
+  os.execute(reset)
+  
+end
 for line in pipein:lines() do
     
 
@@ -47,8 +51,8 @@ for line in pipein:lines() do
        
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
       -- print("tcp flow ", dst_IP)
-      reset = (reset, " dst_IP")
-      os.execute(reset)
+      reset(dst_IP)
+      
   
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
       then
