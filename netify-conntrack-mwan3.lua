@@ -43,10 +43,9 @@ function fetchrules()
   for rule in getrules:lines() do
     table.insert(rules, rule)
   end
-  return rules
   getrules:flush()
   getrules:close()
-  
+  return rules
 end
 
 ruleset = fetchrules()
