@@ -29,7 +29,7 @@ end
 -- Function to get iptables rules
 
 function fetchrules()
-  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
+  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1 $7}\''
   local getrules = assert(io.popen(rulescmd, 'r'))
   rules = {}
   for rule in getrules:lines() do
@@ -41,6 +41,17 @@ function fetchrules()
 end
 
   
+function fetchmarks()
+  local markscmd = 'iptables -L mwan3_policy_prefer_lln -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'
+  local getmarks = assert(io.popen(marksscmd, 'r'))
+  marks = {}
+  for rule in getrules:lines() do
+    table.insert(marks, mark)
+  end
+  getmarks:flush()
+  getmarks:close()
+  return marks
+end
 function pipeconntrack()
 
   -- Variables to to pipe conntrack data into our script. 
@@ -83,6 +94,6 @@ ruleset = fetchrules()
 print(ruleset [1])
 print(ruleset [2])
 
-pipeconntrack()
+--pipeconntrack()
 pipein:close()
 getrules:close()
