@@ -16,7 +16,7 @@ end
 
 local conncmd = 'conntrack -E'
 local pipein  = assert(io.popen(conncmd,  'r'))
-local rules = 'iptables %-L mwan3_rules %-t mangle %| grep %-v LOG %| grep match%-set | awk %'{print %$1}%''
+local rules = 'iptables %-L mwan3_rules %-t mangle %| grep %-v LOG %| grep match%-set | awk %'%{print %$1%}%''
 local getrules = assert(io.popen(rules, 'r'))
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
