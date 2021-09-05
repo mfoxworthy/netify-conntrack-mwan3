@@ -27,7 +27,8 @@ for line in pipein:lines() do
 
   conn_arr = split(line)
 
-  print(string.gsub(conn_arr [1], "%A", ""))
+  status = string.gsub(conn_arr [1], "%A", "")
+  print(status)
 
   pipein:flush()
   
