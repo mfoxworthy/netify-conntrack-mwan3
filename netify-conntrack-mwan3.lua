@@ -27,7 +27,7 @@ for line in pipein:lines() do
 
   conn_arr = split(line)
 
-  print (conn_arr [2])
+  print (conn_arr [1]:gsub("[", ""):gsub("]", ""))
 
   pipein:flush()
   
