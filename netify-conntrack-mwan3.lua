@@ -57,7 +57,7 @@ function fetchmarks(policy)
   marks = {}
   for i, v in ipairs(policy) do
     print(v)
-    table.insert(marks, os.execute('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'))
+    table.insert(marks, tonumber(os.execute('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5')))
   end
   return marks
 end
