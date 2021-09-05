@@ -94,6 +94,6 @@ ruleset = fetchrules()
 print(ruleset [1])
 print(ruleset [2])
 
---pipeconntrack()
---pipein:close()
+pipeconntrack()
+pipein:close()
 getrules:close()
