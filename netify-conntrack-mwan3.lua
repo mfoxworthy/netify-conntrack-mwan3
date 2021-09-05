@@ -52,9 +52,10 @@ for line in pipein:lines() do
         if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
           then
             dport = string.gsub(conn_arr [8], "dport%=", "")
-            print(dport)
+            
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
-            print(dst_IP)
+            
+            print(dst_IP + " " + dport)
             
         end
   end
