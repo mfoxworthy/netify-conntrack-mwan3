@@ -9,14 +9,6 @@ function sleep (n)
     end
 end
 
-
--- Variables to to pipe conntrack data into our script. 
--- We don't format it on the line, we use multiple variables
--- so its best to just use Lua.
-
-
-
-
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
 function split (line)
@@ -37,8 +29,8 @@ end
 -- Function to get iptables rules
 
 function fetchrules()
-  local rules = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
-  local getrules = assert(io.popen(rules, 'r'))
+  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
+  local getrules = assert(io.popen(rulescmd, 'r'))
   rules = {}
   for rule in getrules:lines() do
     table.insert(rules, rule)
@@ -48,21 +40,18 @@ function fetchrules()
   return rules
 end
 
-ruleset = fetchrules()
-
-print(ruleset [1])
-print(ruleset [2])
   
 function pipeconntrack()
+
+  -- Variables to to pipe conntrack data into our script. 
+  -- We don't format it on the line, we use multiple variables
+  -- so its best to just use Lua.
 
   local conncmd = 'conntrack -E'
   local pipein  = assert(io.popen(conncmd,  'r'))
 
   for line in pipein:lines() do
-    
-
     conn_arr = split(line)
-
     status = string.gsub(conn_arr [1], "%A", "")
     
     -- We need to know if the NEW connection is TCP or UDP.
@@ -87,6 +76,13 @@ function pipeconntrack()
     pipein:flush()    
   end
 end
+
+
+ruleset = fetchrules()
+
+print(ruleset [1])
+print(ruleset [2])
+
 pipeconntrack()
 pipein:close()
 getrules:close()
