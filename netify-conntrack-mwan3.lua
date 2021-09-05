@@ -13,7 +13,7 @@ local pipein  = assert(io.popen(conncmd,  'r'))
 for line in pipein:lines() do
     
   words = {}
-  for w in line:gmatch("%s") do 
+  for w in line:gmatch("%s+") do 
     table.insert(words, w) 
   end
 
