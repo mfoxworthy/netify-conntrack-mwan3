@@ -25,7 +25,7 @@ while true do
       for k, v in ipairs (words) do
         print (v)
       end -- for
-      
+    pipein:flush()  
     end
     
 end
