@@ -37,7 +37,7 @@ function fetchpolicy()
   end
   getpols:flush()
   getpols:close()
-  return rules
+  return pols
 end
 
 function fetchipsets()
