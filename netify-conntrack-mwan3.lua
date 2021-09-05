@@ -53,14 +53,15 @@ function fetchipsets()
 end
 
   
-function fetchmarks()
+function fetchmarks(policy)
   m = os.execute('iptables -L ' .. policy .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5')
   marks = {}
   for mark in policy do
-    table.insert(policy, mark)
+    table.insert(marks, mark)
   end
   return marks
 end
+
 function pipeconntrack()
 
   -- Variables to to pipe conntrack data into our script. 
@@ -100,9 +101,10 @@ end
 
 policy = fetchpolicy()
 ipsets = fetchipsets()
-
+marks = fetchmarks(policy)
 for i,v in ipairs(policy) do print(v) end
 for i,v in ipairs(ipsets) do print(v) end
+for i,v in ipairs(marks) do print(v) end
 
 pipeconntrack()
 pipein:close()
