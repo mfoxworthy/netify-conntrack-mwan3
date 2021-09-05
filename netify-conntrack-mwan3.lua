@@ -47,7 +47,8 @@ for line in pipein:lines() do
        
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
       -- print("tcp flow ", dst_IP)
-      os.execute("conntrack %-D %-d ", dst_IP)
+      reset = (reset, " dst_IP")
+      os.execute(reset)
   
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
       then
