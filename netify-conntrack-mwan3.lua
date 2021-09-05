@@ -55,7 +55,7 @@ for line in pipein:lines() do
             
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
             
-            print(dst_IP " " dport)
+            print(dst_IP, " ", dport)
             
         end
   end
