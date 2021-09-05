@@ -15,8 +15,8 @@ while true do
     
     for line in pipein:lines() do
       local words = {}
-      print(line)
-        for w in line:gmatch("%w+") do 
+      print(tostring(line))
+        for w in tostring(line):gmatch("%w+") do 
           table.insert(words, w) 
         end
 
