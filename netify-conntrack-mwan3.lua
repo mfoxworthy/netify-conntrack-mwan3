@@ -10,18 +10,25 @@ end
 local conncmd = 'conntrack -E'
 local pipein  = assert(io.popen(conncmd,  'r'))
 
+function split (line)
+  
+  words = {}
+  
+  for w in line:gmatch("%S+") do 
+    table.insert(words, w)
+  end
+  
+  return words  
+
+end
+
 for line in pipein:lines() do
     
-  words = {}
-  for w in line:gmatch("%S+") do 
-    table.insert(words, w) 
-  end
 
-  print (words [2]) --> is
+  conn_arr = split(line)
 
-  for k, v in ipairs (words) do
-    print (v)
-  end -- for
+  print (conn_arr [2])
+
   pipein:flush()
   
 end
