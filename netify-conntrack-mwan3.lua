@@ -12,7 +12,7 @@ local pipein  = assert(io.popen(conncmd,  'r'))
 
 while true do
     
-    line = pipein:write()
+    local line = tostring(pipein:write())
       
     print(line)
     pipein:flush()
