@@ -29,7 +29,7 @@ end
 -- Function to get iptables rules
 
 function fetchrules()
-  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1, $7}\''
+  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
   local getrules = assert(io.popen(rulescmd, 'r'))
   rules = {}
   for rule in getrules:lines() do
@@ -40,16 +40,25 @@ function fetchrules()
   return rules
 end
 
+function fetchipsets()
+  local ipsetcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $7}\''
+  local getsets = assert(io.popen(ipsetcmd, 'r'))
+  sets = {}
+  for set in getsets:lines() do
+    table.insert(sets, set)
+  end
+  getsets:flush()
+  getsets:close()
+  return sets
+end
+
   
 function fetchmarks()
-  local markscmd = 'iptables -L mwan3_policy_prefer_lln -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'
-  local getmarks = assert(io.popen(marksscmd, 'r'))
+  m = os.execute('iptables -L ' .. policy .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5')
   marks = {}
-  for rule in getrules:lines() do
+  for mark in policy do
     table.insert(marks, mark)
   end
-  getmarks:flush()
-  getmarks:close()
   return marks
 end
 function pipeconntrack()
@@ -90,9 +99,10 @@ end
 
 
 ruleset = fetchrules()
+ipsets = fetchipsets()
 
-print(ruleset [1])
-print(ruleset [2])
+for i,v in ipairs(ruleset) do print(v) end
+for i,v in ipairs(ipsets) do print(v) end
 
 pipeconntrack()
 pipein:close()
