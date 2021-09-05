@@ -47,7 +47,7 @@ for line in pipein:lines() do
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
       print(dst_IP)
   
-  elseif (status == "NEW" and conn_arr [2] == "udp" and string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67") -- pick off UDP but leave DNS alone
+  elseif (status == "NEW" and conn_arr [2] == "udp" and string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) -- pick off UDP but leave DNS alone
       then
         dst_IP = string.gsub(conn_arr [6], "dst%=", "")
         print(dst_IP)
