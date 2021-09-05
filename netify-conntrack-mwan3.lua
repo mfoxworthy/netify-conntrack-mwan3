@@ -15,10 +15,10 @@ while true do
     pipeout:lines()
       
     print(tostring(line))
-    pipein:flush()
+    pipeout:flush()
       
     
     
 end
 
-pipein:close()
+pipeout:close()
