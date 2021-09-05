@@ -42,9 +42,11 @@ function fetchrules()
   rules = {}
   for rule in getrules:lines() do
     table.insert(rules, rule)
-    getrules:flush()
   end
   return rules
+  getrules:flush()
+  getrules:close()
+  
 end
 
 ruleset = fetchrules()
