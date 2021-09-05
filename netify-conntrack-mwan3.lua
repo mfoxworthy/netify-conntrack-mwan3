@@ -16,26 +16,42 @@ end
 
 local conncmd = 'conntrack -E'
 local pipein  = assert(io.popen(conncmd,  'r'))
+local rules = 'iptables %-L mwan3_rules %-t mangle %| grep %-v LOG %| grep match%-set | awk %'{print %$1}%''
+local getrules = assert(io.popen(rules, 'r'))
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
 function split (line)
-  
   words = {}
-  
   for w in line:gmatch("%S+") do 
     table.insert(words, w)
   end
-  
   return words  
-
 end
+
+-- Function to reset flow
 
 function reset (dst_IP)
   local reset = "conntrack -D -d " .. dst_IP
-  os.execute(reset)
-  
+  os.execute(reset)  
 end
+
+-- Function to get iptables rules
+
+function fetchrules()
+  rules = {}
+  for rule in getrules:lines()
+    table.insert(rules, rule)
+    getrules:flush
+  end
+  return rules
+  getrules:close()
+end
+
+ruleset = fetchrules()
+
+print(ruleset [1])
+  
 for line in pipein:lines() do
     
 
@@ -50,8 +66,9 @@ for line in pipein:lines() do
      then
        
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+      mark = 
       -- print("tcp flow ", dst_IP)
-      reset(dst_IP)
+      --reset(dst_IP)
       
   
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
