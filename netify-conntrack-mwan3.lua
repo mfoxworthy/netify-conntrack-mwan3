@@ -95,5 +95,5 @@ print(ruleset [1])
 print(ruleset [2])
 
 --pipeconntrack()
-pipein:close()
+--pipein:close()
 getrules:close()
