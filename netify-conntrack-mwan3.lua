@@ -1,7 +1,5 @@
 #!/usr/bin/lua
 
-local timeformat = '%a %b %d %H:%M:%S'
-
 function sleep (n)
     local t = os.clock()
     while os.clock() - t <= n do
@@ -17,6 +15,7 @@ while true do
     
     for line in pipein:lines() do
       local words = {}
+      print(line)
         for w in line:gmatch("%w+") do 
           table.insert(words, w) 
         end
