@@ -7,7 +7,7 @@ function sleep (n)
     end
 end
 
-local conncmd = 'conntrack -E | grep \'tcp\|udp\''
+local conncmd = 'conntrack -E'
 local pipeout  = assert(io.popen(conncmd,  'w'))
 
 while true do
