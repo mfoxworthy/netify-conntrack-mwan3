@@ -16,6 +16,8 @@ end
 
 local conncmd = 'conntrack -E'
 local pipein  = assert(io.popen(conncmd,  'r'))
+local reset = 'conntrack -D -d'
+local pipeout = assert(io.popen(reset, 'w'))
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
@@ -38,14 +40,16 @@ for line in pipein:lines() do
 
   status = string.gsub(conn_arr [1], "%A", "")
   
-  -- We need to know if the NEW conntection is TCP or UDP.
+  -- We need to know if the NEW connection is TCP or UDP.
   -- conntrack formats these lines differently
   
   if (status == "NEW" and conn_arr [2] == "tcp")
      then
        
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-      print("tcp flow ", dst_IP)
+      -- print("tcp flow ", dst_IP)
+      pipeout:write(dst_IP)
+      pipeout:flush()
   
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
       then
@@ -55,7 +59,7 @@ for line in pipein:lines() do
             
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
             
-            print("udp flow ", dst_IP, " ", dport)
+            -- print("udp flow ", dst_IP, " ", dport)
             
         end
   end
@@ -64,3 +68,4 @@ for line in pipein:lines() do
 end
       
 pipein:close()
+pipeout:close()
