@@ -12,7 +12,7 @@ local pipeout  = assert(io.popen(conncmd,  'w'))
 
 while true do
     
-    pipeout:lines()
+    line = pipeout:lines()
       
     print(line)
     pipeout:flush()
