@@ -35,7 +35,7 @@ for line in pipein:lines() do
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
       print(dst_IP)
   
-  esleif (status == "NEW" and conn_arr [2] == "udp")
+  elseif (status == "NEW" and conn_arr [2] == "udp")
       then
         dst_IP = string.gsub(conn_arr [6], "dst%=", "")
         print(dst_IP)
