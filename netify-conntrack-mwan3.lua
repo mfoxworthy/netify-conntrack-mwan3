@@ -13,7 +13,7 @@ local pipein  = assert(io.popen(conncmd,  'r'))
 for line in pipein:lines() do
     
   print(line)
-  pipeout:flush()
+  pipein:flush()
 end
       
 pipein:close()
