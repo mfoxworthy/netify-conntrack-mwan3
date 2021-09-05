@@ -9,12 +9,23 @@ function sleep (n)
     end
 end
 
-local conncmd = 'conntrack -E | grep NEW | grep tcp | awk \'{print $7 \" \" $15}\''
+local conncmd = 'conntrack -E | grep NEW | grep \'tcp|udp\''
 local pipeout = assert(io.popen(conncmd, 'w'))
 
 while true do
     
-    pipeout:write()
+    s = pipeout:write()
+    words = {}
+      for w in s:gmatch("%w+") do 
+        table.insert(words, w) 
+      end
+
+--print (words [2]) --> is
+
+    for k, v in ipairs (words) do
+      print (v)
+    end -- for
+    -- pipeout:write()
     pipeout:flush()
     
    
