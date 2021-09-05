@@ -10,9 +10,9 @@ end
 local conncmd = 'conntrack -E | grep \'tcp|udp\''
 local pipeout  = assert(io.popen(conncmd,  'w'))
 
-for line in pipeout:write() do
+while true do
     
-  print(line)
+  pipeout:write()
   pipeout:flush()
 end
       
