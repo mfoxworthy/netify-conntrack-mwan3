@@ -40,7 +40,7 @@ end
 
 function fetchrules()
   rules = {}
-  for rule in getrules:lines()
+  for rule in getrules:lines() do
     table.insert(rules, rule)
     getrules:flush
   end
