@@ -66,4 +66,3 @@ for line in pipein:lines() do
 end
       
 pipein:close()
-pipeout:close()
