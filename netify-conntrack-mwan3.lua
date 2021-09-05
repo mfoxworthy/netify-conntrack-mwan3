@@ -101,7 +101,7 @@ end
 policy = fetchpolicy()
 ipsets = fetchipsets()
 
-for i,v in ipairs(ruleset) do print(v) end
+for i,v in ipairs(policy) do print(v) end
 for i,v in ipairs(ipsets) do print(v) end
 
 pipeconntrack()
