@@ -19,6 +19,17 @@ local pipein  = assert(io.popen(conncmd,  'r'))
 local rules = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
 local getrules = assert(io.popen(rules, 'r'))
 
+function os.capture(cmd, raw)
+  local f = assert(io.popen(cmd, 'r'))
+  local s = assert(f:read('*a'))
+  f:close()
+  if raw then return s end
+  s = string.gsub(s, '^%s+', '')
+  s = string.gsub(s, '%s+$', '')
+  s = string.gsub(s, '[\n\r]+', ' ')
+  return s
+end
+
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
 function split (line)
@@ -40,7 +51,7 @@ end
 
 function fetchrules()
   rules = {}
-  for rule in getrules:read() do
+  for rule in getrules:lines() do
     table.insert(rules, rule)
     --getrules:flush()
   end
@@ -48,7 +59,7 @@ function fetchrules()
   return rules
 end
 
-ruleset = fetchrules()
+ruleset = os.capture('iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\'')
 
 print(ruleset [1])
   
