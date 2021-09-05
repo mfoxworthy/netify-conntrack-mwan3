@@ -54,10 +54,10 @@ end
 
   
 function fetchmarks(policy)
-  m = os.execute('iptables -L ' .. policy .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5')
   marks = {}
   for mark in policy do
-    table.insert(marks, mark)
+    m = os.execute('iptables -L ' .. mark .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5')
+    table.insert(marks, m)
   end
   return marks
 end
