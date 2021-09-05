@@ -28,8 +28,18 @@ for line in pipein:lines() do
   conn_arr = split(line)
 
   status = string.gsub(conn_arr [1], "%A", "")
-  print(status)
-
+  
+  if (status == "NEW" and conn_arr [2] == "tcp")
+     then
+       
+      dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+      print(dst_IP)
+  
+  esleif (status == "NEW" and conn_arr [2] == "udp")
+      then
+        dst_IP = string.gsub(conn_arr [6], "dst%=", "")
+        print(dst_IP)
+  end
   pipein:flush()
   
 end
