@@ -45,7 +45,7 @@ for line in pipein:lines() do
      then
        
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-      print(dst_IP)
+      print("tcp flow ", dst_IP)
   
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
       then
@@ -55,7 +55,7 @@ for line in pipein:lines() do
             
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
             
-            print(dst_IP, " ", dport)
+            print("udp flow ", dst_IP, " ", dport)
             
         end
   end
