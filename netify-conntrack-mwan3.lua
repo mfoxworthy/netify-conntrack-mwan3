@@ -14,7 +14,7 @@ while true do
     
     pipeout:lines()
       
-    print(tostring(line))
+    print(line)
     pipeout:flush()
       
     
