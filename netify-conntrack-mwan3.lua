@@ -12,12 +12,12 @@ local pipein  = assert(io.popen(conncmd,  'r'))
 
 while true do
     
-    for line in pipein:lines() do
+    pipein:lines()
       
-      print(tostring(line))
-      pipein:flush()
+    print(tostring(line))
+    pipein:flush()
       
-    end
+    
     
 end
 
