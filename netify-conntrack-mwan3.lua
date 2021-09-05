@@ -29,7 +29,7 @@ end
 -- Function to get iptables rules
 
 function fetchrules()
-  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1 $7}\''
+  local rulescmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1, $7}\''
   local getrules = assert(io.popen(rulescmd, 'r'))
   rules = {}
   for rule in getrules:lines() do
