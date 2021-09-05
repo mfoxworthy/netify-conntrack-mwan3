@@ -42,9 +42,8 @@ function fetchrules()
   rules = {}
   for rule in getrules:lines() do
     table.insert(rules, rule)
-    --getrules:flush()
+    getrules:flush()
   end
-  -- getrules:close()
   return rules
 end
 
@@ -65,19 +64,14 @@ for line in pipein:lines() do
   
   if (status == "NEW" and conn_arr [2] == "tcp")
      then
-       
       dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-      
       -- print("tcp flow ", dst_IP)
       --reset(dst_IP)
-      
-  
   elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
       then
         if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
           then
             dport = string.gsub(conn_arr [8], "dport%=", "")
-            
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
             
             -- print("udp flow ", dst_IP, " ", dport)
