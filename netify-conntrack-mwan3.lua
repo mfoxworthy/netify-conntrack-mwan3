@@ -10,7 +10,7 @@ end
 local conncmd = 'conntrack -E | grep \'tcp|udp\''
 local pipein  = assert(io.popen(conncmd,  'r'))
 
-for line in pipein:lines()
+for line in pipein:lines() do
     
   print(line)
   pipeout:flush()
