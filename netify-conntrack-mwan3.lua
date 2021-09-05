@@ -44,7 +44,7 @@ function fetchrules()
     table.insert(rules, rule)
     getrules:flush()
   end
-  getrules:close()
+  -- getrules:close()
   return rules
 end
 
@@ -89,3 +89,4 @@ for line in pipein:lines() do
 end
       
 pipein:close()
+getrules:close()
