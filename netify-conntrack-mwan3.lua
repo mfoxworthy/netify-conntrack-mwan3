@@ -14,7 +14,7 @@ local pipeout = assert(io.popen(conncmd, 'w'))
 
 while true do
     
-    s = pipeout:write()
+    s = pipeout:read()
     words = {}
       for w in s:gmatch("%w+") do 
         table.insert(words, w) 
