@@ -8,13 +8,13 @@ function sleep (n)
 end
 
 local conncmd = 'conntrack -E'
-local pipeout  = assert(io.popen(conncmd,  'w'))
+local pipein  = assert(io.popen(conncmd,  'r'))
 
-while true do
+for line in pipein:lines() do
     
-  pipeout:write()
-  pipeout:flush()
+  print(line)
+  pipein:flush()
   
 end
       
-pipeout:close()
+pipein:close()
