@@ -9,7 +9,7 @@ function sleep (n)
     end
 end
 
-local conncmd = 'conntrack -E | grep NEW | grep \'tcp|udp\''
+local conncmd = 'conntrack -E | grep \'tcp|udp\''
 --local pipeout = assert(io.popen(conncmd, 'w'))
 local pipein  = assert(io.popen(conncmd,  'r'))
 
