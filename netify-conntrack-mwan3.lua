@@ -8,11 +8,11 @@ function sleep (n)
 end
 
 local conncmd = 'conntrack -E | grep \'tcp|udp\''
-local pipein  = assert(io.popen(conncmd,  'r'))
+local pipeout  = assert(io.popen(conncmd,  'w'))
 
 while true do
     
-    pipein:lines()
+    pipeout:lines()
       
     print(tostring(line))
     pipein:flush()
