@@ -14,8 +14,7 @@ end
 -- We don't format it on the line, we use multiple variables
 -- so its best to just use Lua.
 
-local conncmd = 'conntrack -E'
-local pipein  = assert(io.popen(conncmd,  'r'))
+
 
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
@@ -54,35 +53,40 @@ ruleset = fetchrules()
 print(ruleset [1])
 print(ruleset [2])
   
-for line in pipein:lines() do
+function pipeconntrack()
+
+  local conncmd = 'conntrack -E'
+  local pipein  = assert(io.popen(conncmd,  'r'))
+
+  for line in pipein:lines() do
     
 
-  conn_arr = split(line)
+    conn_arr = split(line)
 
-  status = string.gsub(conn_arr [1], "%A", "")
-  
-  -- We need to know if the NEW connection is TCP or UDP.
-  -- conntrack formats these lines differently
-  
-  if (status == "NEW" and conn_arr [2] == "tcp")
-     then
-      dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-      -- print("tcp flow ", dst_IP)
-      --reset(dst_IP)
-  elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
-      then
-        if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
-          then
-            dport = string.gsub(conn_arr [8], "dport%=", "")
-            dst_IP = string.gsub(conn_arr [6], "dst%=", "")
-            
-            -- print("udp flow ", dst_IP, " ", dport)
-            
-        end
+    status = string.gsub(conn_arr [1], "%A", "")
+    
+    -- We need to know if the NEW connection is TCP or UDP.
+    -- conntrack formats these lines differently
+    
+    if (status == "NEW" and conn_arr [2] == "tcp")
+       then
+        dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+        -- print("tcp flow ", dst_IP)
+        --reset(dst_IP)
+    elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
+        then
+          if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
+            then
+              dport = string.gsub(conn_arr [8], "dport%=", "")
+              dst_IP = string.gsub(conn_arr [6], "dst%=", "")
+              
+              -- print("udp flow ", dst_IP, " ", dport)
+              
+          end
+    end
+    pipein:flush()    
   end
-  pipein:flush()
-  
 end
-      
+pipeconntrack()
 pipein:close()
 getrules:close()
