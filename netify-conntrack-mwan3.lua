@@ -56,9 +56,13 @@ end
 function fetchmarks(policy)
   marks = {}
   for i, v in ipairs(policy) do
-    m = tostring(os.execute('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'))
-    print(m)
-    table.insert(marks, m)
+    local markcmd = assert(io.popen('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'), 'r')
+    for m in markcmd:lines() do
+      print(m)
+      table.insert(marks, m)
+    end
+  markcmd:flush()
+  markcmd:close()
   end
   return marks
 end
