@@ -21,9 +21,10 @@ end
 
 -- Function to reset flow
 
-function reset (dst_IP, set)
+function reset (dst_IP, set, del_set)
   local reset = "conntrack -D -d " .. dst_IP
   os.execute(reset)
+  os.execute('ipset del ' .. del_set .. ' ' dst_IP)
   os.execute('ipset add ' .. set .. ' ' .. dst_IP)
 end
 
@@ -112,7 +113,8 @@ function fixconntrack (f_mark, dst_IP, g_marks)
     then
       print('Found in wrong set ' .. f_mark .. " " .. in_table)
       local set = g_marks[tonumber(f_mark)]
-      reset(dst_IP, set)
+      local del_set = g_marks[in_table]
+      reset(dst_IP, set, del_set)
       
       
   end
