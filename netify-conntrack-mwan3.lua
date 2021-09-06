@@ -35,6 +35,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute(reset)
   os.execute('ipset del ' .. del_set .. ' ' .. dst_IP)
   os.execute('ipset add ' .. set .. ' ' .. dst_IP)
+  os.execute('logger \'Made ipset correction for \'' .. dst_IP)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -89,8 +90,6 @@ function fixconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
-  print(f_mark)
-  print(dst_IP)
   if (f_mark ~= nil)
     then
       -- sleep(1)
@@ -120,13 +119,10 @@ function fixconntrack (f_mark, dst_IP, g_marks)
   end
   if (in_table == nil)
     then
-      --print('Not in sets')
   elseif (mark_check == set_count)
     then
-      --print('Mark not in sets')
   elseif (in_table ~= tonumber(f_mark))
     then
-      -- print('Found in wrong set ' .. f_mark .. " " .. in_table)
       local set = g_marks[tonumber(f_mark)]
       local del_set = g_marks[in_table]
       flow_reset(dst_IP, set, del_set)
@@ -160,19 +156,12 @@ function pipeconntrack (marks)
             local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
             local f_mark = string.gsub(conn_arr [15], "mark%=", "")
             local test_reset = fixconntrack(f_mark, dst_IP, marks)
-            
-            print(test_reset)
-            -- print("tcp flow ", dst_IP)
-            --reset(dst_IP)
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
             then
               if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
                 then
                   dport = string.gsub(conn_arr [8], "dport%=", "")
-                  dst_IP = string.gsub(conn_arr [6], "dst%=", "")
-                  
-                  -- print("udp flow ", dst_IP, " ", dport)
-                  
+                  dst_IP = string.gsub(conn_arr [6], "dst%=", "")                  
               end
         end
     end
