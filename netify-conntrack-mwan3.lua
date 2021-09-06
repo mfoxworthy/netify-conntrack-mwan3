@@ -67,8 +67,10 @@ function fetchmarks (policy, ipsets)
   return marks
 end
 
-function testconntrack (mark, ip, marks)
-  print(marks[mark])
+function testconntrack (mark, ip)
+  local policy = fetchpolicy()
+  local ipsets = fetchipsets()
+  local marks = fetchmarks(policy, ipsets)
   local f_mark = marks[mark]
   local conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
@@ -86,7 +88,7 @@ function testconntrack (mark, ip, marks)
     return conn_reset
 end
 
-function pipeconntrack (marks)
+function pipeconntrack ()
 
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
@@ -106,7 +108,7 @@ function pipeconntrack (marks)
        then
         local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
         local f_mark = string.gsub(conn_arr [15], "mark%=", "")
-        local test_reset = testconntrack(f_mark, dst_IP, marks)
+        local test_reset = testconntrack(f_mark, dst_IP)
         
         print(test_reset)
         -- print("tcp flow ", dst_IP)
@@ -135,5 +137,5 @@ for i,v in ipairs(policy) do print(v) end
 for k,v in pairs(marks) do print(k, v) end
 
 
-pipeconntrack(marks)
+pipeconntrack()
 pipein:close()
