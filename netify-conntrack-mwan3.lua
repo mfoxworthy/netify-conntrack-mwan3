@@ -84,6 +84,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
             print('table IP ' .. m)
               if ( m == dst_IP )
                 then
+                  print('In Table ' .. k)
                   in_table = k
               end
           end
