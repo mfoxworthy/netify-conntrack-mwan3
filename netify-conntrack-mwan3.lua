@@ -80,10 +80,9 @@ function testconntrack (f_mark, dst_IP, g_marks)
         print('Checking Table ' .. v)
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
-            print('table IP ' .. m)
               if ( m == dst_IP )
                 then
-                  print('In Table ' .. k)
+                  print('Found in table ' .. k)
                   in_table = k
               else
                 
