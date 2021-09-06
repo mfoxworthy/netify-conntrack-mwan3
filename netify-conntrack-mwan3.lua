@@ -72,17 +72,17 @@ function testconntrack (f_mark, dst_IP, g_marks)
   print(dst_IP)
   f_mark = g_marks[tonumber(f_mark)]
   local conn_reset = 0
+  wait(5)
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
   print(conncheckcmd)
   local conncheck = assert(io.popen(conncheckcmd, 'r'))
     for m in conncheck:lines() do
       print('table IP ' .. m)
       
-        if ( m = dst_IP )
+        if ( m ~= dst_IP )
           then
-            break
-        else
-          conn_reset = 1
+            conn_reset = 1
+        
         end
     end
     return conn_reset
