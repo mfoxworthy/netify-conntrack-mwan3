@@ -103,7 +103,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
         if (logging == 1)
           then
-            os.execute('logger \'Checking set \'' .. v)
+            os.execute('logger -p notice -t conntrack_fix \'Checking set \'' .. v)
         end
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
@@ -111,7 +111,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
                 then
                   if (logging == 1)
                     then
-                      os.execute('logger \'Found in set \'' .. v .. " " .. k)
+                      os.execute('logger -p notice -t conntrack_fix \'Found in set \'' .. v .. " " .. k)
                   end
                   in_table = k
               end
