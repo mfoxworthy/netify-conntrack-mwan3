@@ -101,12 +101,18 @@ function fixconntrack (f_mark, dst_IP, g_marks)
         end
         set_count = set_count + 1
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
-        os.execute('logger \'Checking set \'' .. v)
+        if (logging =1)
+          then
+            os.execute('logger \'Checking set \'' .. v)
+        end
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
               if ( m == dst_IP )
                 then
-                  print('Found in set ' .. v .. " " .. k)
+                  if (logging =1)
+                    then
+                      os.execute('logger \'Found in set \'' .. v .. " " .. k)
+                  end
                   in_table = k
               end
           end
@@ -176,6 +182,7 @@ function pipeconntrack (marks)
 end
 
 -- Set tables up at start so we don't keep looking at static data.
+logging = 1
 policy = fetchpolicy()
 ipsets = fetchipsets()
 marks = fetchmarks(policy, ipsets)
