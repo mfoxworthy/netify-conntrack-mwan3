@@ -157,11 +157,13 @@ function pipeconntrack (marks)
            then
             local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
             os.execute('logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP)
-            if (f_mark ~= nil) -- need to figure out the empty ones but for now we'll ride through it.
+            if (f_mark == nil) -- need to figure out the empty ones but for now we'll ride through it.
               then
                 os.execute('logger -p err -t conntrack_fix \"No tag found\"')
+            else
+              local f_mark = string.gsub(conn_arr [15], "mark%=", "")
             end
-            local f_mark = string.gsub(conn_arr [15], "mark%=", "")
+            
               
             local test_reset = fixconntrack(f_mark, dst_IP, marks)
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
