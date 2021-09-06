@@ -1,5 +1,13 @@
 #!/usr/bin/lua
 
+-- Author - Michael Foxworthy
+
+-- This program will keep track of connections on load balanced policies with mwan3.
+-- The flows are detected with the Netify plugins and the ipset sets are updated wit the dst_IP
+-- If the intended interface isn't used, this program will terminate the connection and delete
+-- the entries from the ipsets. It will add the entry to the correct ipset rule. The next time
+-- the connection is tried it will take the correct path.
+
 -- Lua doesn't have a built in sleep funtion so we build are own.
 
 function sleep (n)
