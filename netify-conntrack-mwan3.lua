@@ -61,8 +61,8 @@ function fetchmarks(policy, ipsets)
         key = ipsets[i]
         print(key)
         marks.key = m
-        markcmd:flush()
       end
+      markcmd:flush()
   end
   markcmd:close()
   return marks
