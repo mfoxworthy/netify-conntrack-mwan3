@@ -90,7 +90,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
   end
   if (in_table == nil)
     then
-      break
+      print('Not in sets')
   elseif (in_table ~= tonumber(f_mark)
     then
       print('Found in wrong set ' .. f_mark .. " " .. in_table)
