@@ -78,12 +78,13 @@ function testconntrack (f_mark, dst_IP, g_marks)
       sleep(5)
       for k, v in pairs(g_marks) do
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
+        print('Checking Table ' .. v)
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
             print('table IP ' .. m)
-              if ( m == dst_IP )
+              if ( m ~= dst_IP )
                 then
-                  in_table = k
+                  in_table ~= k
               end
           end
       end
