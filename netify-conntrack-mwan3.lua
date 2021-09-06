@@ -84,9 +84,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
                 then
                   print('Found in table ' .. k)
                   in_table = k
-              else
-                
-                print('Not in table')
+              
               end
           end
       end
