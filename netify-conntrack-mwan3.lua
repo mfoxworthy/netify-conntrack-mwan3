@@ -107,6 +107,7 @@ function pipeconntrack (marks)
        then
         dst_IP = string.gsub(conn_arr [7], "dst%=", "")
         f_mark = string.gsub(conn_arr [15], "mark%=", "")
+        print(f_mark)
         test_reset = testconntrack(f_mark, dst_IP, marks)
         print(test_reset)
         -- print("tcp flow ", dst_IP)
