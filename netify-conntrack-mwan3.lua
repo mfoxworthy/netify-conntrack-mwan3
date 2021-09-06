@@ -55,14 +55,11 @@ end
   
 function fetchmarks(policy, ipsets)
   marks = {}
-  local markcmd = assert(io.popen('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'), 'r')
+  
   for i, v in ipairs(policy) do
-    
+    local markcmd = assert(io.popen('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'), 'r')
       for m in markcmd:lines() do
-        print(ipsets[i])
-        key = tostring(ipsets[i])
-        print(key)
-        marks.key = m
+        print(m)
       end
       markcmd:flush()
       markcmd:close()
@@ -111,7 +108,7 @@ policy = fetchpolicy()
 ipsets = fetchipsets()
 marks = fetchmarks(policy, ipsets)
 for i,v in ipairs(policy) do print(v) end
-for k,v in pairs(marks) do print(k, v) end
+--for k,v in pairs(marks) do print(k, v) end
 
 
 pipeconntrack()
