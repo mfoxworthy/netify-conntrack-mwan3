@@ -108,7 +108,7 @@ policy = fetchpolicy()
 ipsets = fetchipsets()
 marks = fetchmarks(policy, ipsets)
 for i,v in ipairs(policy) do print(v) end
-for i,v in ipairs(ipsets) do print(i) end
+for k,v in pairs(ipsets) do print('\t', k, v) end
 
 
 pipeconntrack()
