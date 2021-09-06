@@ -78,7 +78,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
     for m in conncheck:lines() do
       print('table IP ' .. m)
       
-        if ( m == dst_IP )
+        if ( m = dst_IP )
           then
             break
         else
