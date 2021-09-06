@@ -101,7 +101,7 @@ function pipeconntrack (marks)
     
     -- We need to know if the NEW connection is TCP or UDP.
     -- conntrack formats these lines differently
-    print(marks[f_mark])
+    print(marks[256])
     if (status == "NEW" and conn_arr [2] == "tcp")
        then
         dst_IP = string.gsub(conn_arr [7], "dst%=", "")
