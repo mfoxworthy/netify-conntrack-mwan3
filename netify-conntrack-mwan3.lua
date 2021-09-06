@@ -28,7 +28,7 @@ end
 
 -- Function to get iptables rules
 
-function fetchpolicy()
+function fetchpolicy ()
   local polcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
   local getpols = assert(io.popen(polcmd, 'r'))
   pols = {}
@@ -40,7 +40,7 @@ function fetchpolicy()
   return pols
 end
 
-function fetchipsets()
+function fetchipsets ()
   local ipsetcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $7}\''
   local getsets = assert(io.popen(ipsetcmd, 'r'))
   sets = {}
@@ -53,7 +53,7 @@ function fetchipsets()
 end
 
   
-function fetchmarks(policy, ipsets)
+function fetchmarks (policy, ipsets)
   marks = {}
   for i, v in ipairs(policy) do
     k = ipsets[i]
@@ -67,7 +67,25 @@ function fetchmarks(policy, ipsets)
   return marks
 end
 
-function pipeconntrack()
+function testconntrack (mark, ip, marks_tab)
+  f_mark = marks_tab[mark]
+  conn_reset = 0
+  local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
+  local conncheck = assert(io.popen(conncheckcmd, 'r')
+    for m in conncheck:lines() do
+      print(m)
+      print(ip)
+        if ( m == ip )
+          then
+            break
+        else
+          conn_reset = 1
+        end
+    end
+    return conn_reset
+end
+
+function pipeconntrack (marks)
 
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
@@ -86,6 +104,9 @@ function pipeconntrack()
     if (status == "NEW" and conn_arr [2] == "tcp")
        then
         dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+        f_mark = string.gsub(conn_arr [15], "mark%=", "")
+        test_reset = testconntrack(f_mark, dst_IP, marks)
+        print(test_reset)
         -- print("tcp flow ", dst_IP)
         --reset(dst_IP)
     elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
@@ -112,5 +133,5 @@ for i,v in ipairs(policy) do print(v) end
 for k,v in pairs(marks) do print(k, v) end
 
 
-pipeconntrack()
+pipeconntrack(marks)
 pipein:close()
