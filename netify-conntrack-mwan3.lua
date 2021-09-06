@@ -71,6 +71,7 @@ function testconntrack (mark, ip)
   local policy = fetchpolicy()
   local ipsets = fetchipsets()
   local marks = fetchmarks(policy, ipsets)
+  for k,v in pairs(marks) do print(k, v) end
   local f_mark = marks[mark]
   local conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
