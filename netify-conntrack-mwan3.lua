@@ -171,7 +171,7 @@ function pipeconntrack (marks)
 end
 
 -- Set tables up at start so we don't keep looking at static data.
-logging = 0
+logging = 1
 policy = fetchpolicy()
 ipsets = fetchipsets()
 marks = fetchmarks(policy, ipsets)
