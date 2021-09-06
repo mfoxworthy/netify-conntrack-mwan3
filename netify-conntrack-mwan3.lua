@@ -17,11 +17,7 @@ function sleep (n)
 end
 
 
--- Logger function for OpenWRT
 
-function logger(message)
-  os.execute('logger ' .. message)
-  
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
 function split (line)
