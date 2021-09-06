@@ -68,23 +68,27 @@ function fetchmarks (policy, ipsets)
 end
 
 function testconntrack (f_mark, dst_IP, g_marks)
+  local conn_reset = 0
   print(f_mark)
   print(dst_IP)
   f_mark = g_marks[tonumber(f_mark)]
-  local conn_reset = 0
-  sleep(5)
-  local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
-  print(conncheckcmd)
-  local conncheck = assert(io.popen(conncheckcmd, 'r'))
-    for m in conncheck:lines() do
-      print('table IP ' .. m)
+  if (f_mark == nil)
+    then
+      break
+    else
+      sleep(5)
+      local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
+      print(conncheckcmd)
+      local conncheck = assert(io.popen(conncheckcmd, 'r'))
+        for m in conncheck:lines() do
+          print('table IP ' .. m)
       
-        if ( m ~= dst_IP )
-          then
-            conn_reset = 1
+          if ( m ~= dst_IP )
+            then
+              conn_reset = 1
         
-        end
-    end
+          end
+      end
     return conn_reset
 end
 
