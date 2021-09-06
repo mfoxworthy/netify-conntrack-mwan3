@@ -101,7 +101,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
             mark_check = mark_check + 1
         end
         set_count = set_count + 1
-        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9'
+        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         if (logging == 1)
           then
             os.execute('logger -p notice -t conntrack_fix \'Checking set \'' .. v)
