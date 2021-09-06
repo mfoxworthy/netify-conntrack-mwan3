@@ -109,7 +109,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
           for m in conncheck:lines() do
               if ( m == dst_IP )
                 then
-                  if (logging =1)
+                  if (logging == 1)
                     then
                       os.execute('logger \'Found in set \'' .. v .. " " .. k)
                   end
