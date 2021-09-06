@@ -21,9 +21,10 @@ end
 
 -- Function to reset flow
 
-function reset (dst_IP)
+function reset (dst_IP, set)
   local reset = "conntrack -D -d " .. dst_IP
-  os.execute(reset)  
+  os.execute(reset)
+  os.execute('ipset add ' .. set .. ' ' .. dst_IP)
 end
 
 -- Function to get iptables rules
@@ -103,8 +104,9 @@ function fixconntrack (f_mark, dst_IP, g_marks)
   elseif (in_table ~= tonumber(f_mark))
     then
       print('Found in wrong set ' .. f_mark .. " " .. in_table)
-      reset(dst_IP)
-      os.execute('ipset add ' .. g_marks[tonumber(f_mark)] .. ' ' .. dst_IP)
+      local set = g_marks[tonumber(f_mark)]
+      reset(dst_IP, set)
+      
       
   end
   return conn_reset
