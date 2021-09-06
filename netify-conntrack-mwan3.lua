@@ -162,7 +162,7 @@ function pipeconntrack (marks)
               then
                 os.execute('logger -p err -t conntrack_fix \"No tag found\"')
             else
-              local f_mark = string.gsub(conn_arr [15], "mark%=", "")
+              f_mark = string.gsub(conn_arr [15], "mark%=", "")
             end
             
               
