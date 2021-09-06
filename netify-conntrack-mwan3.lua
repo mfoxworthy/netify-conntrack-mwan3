@@ -8,15 +8,20 @@
 -- the entries from the ipsets. It will add the entry to the correct ipset rule. The next time
 -- the connection is tried it will take the correct path.
 
--- Lua doesn't have a built in sleep funtion so we build are own.
+-- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 
 function sleep (n)
     local t = os.clock()
     while os.clock() - t <= n do
-        -- nothing
     end
 end
 
+
+-- Logger function for OpenWRT
+
+function logger(message)
+  os.execute('logger ' .. message)
+  
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
 function split (line)
@@ -100,7 +105,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
         end
         set_count = set_count + 1
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
-        print('Checking set ' .. v)
+        os.execute('logger \'Checking set ' .. v\')
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
               if ( m == dst_IP )
@@ -174,13 +179,15 @@ function pipeconntrack (marks)
   
 end
 
-
+-- Set tables up at start so we don't keep looking at static data.
 policy = fetchpolicy()
 ipsets = fetchipsets()
-marks = fetchmarks(policy, ipsets)
-for i,v in ipairs(policy) do print(v) end
-for k,v in pairs(marks) do print(k, v) end
+marks = fetchmarks(policy, ipsets
 
+-- Kick things off.
 
 pipeconntrack(marks)
+
+-- Close it all down
+
 pipein:close()
