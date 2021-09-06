@@ -67,10 +67,10 @@ function fetchmarks (policy, ipsets)
   return marks
 end
 
-function testconntrack (mark, ip, g_marks)
-  print(mark)
-  print(g_marks[tostring(mark)])
-  f_mark = (g_marks[mark])
+function testconntrack (f_mark, dst_IP, g_marks)
+  print(f_mark)
+  print(g_marks[tostring(f_mark)])
+  f_mark = (g_marks[f_mark])
   print(f_mark)
   local conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
@@ -78,8 +78,8 @@ function testconntrack (mark, ip, g_marks)
   local conncheck = assert(io.popen(conncheckcmd, 'r'))
     for m in conncheck:lines() do
       print(m)
-      print(ip)
-        if ( m == ip )
+      print(dst_IP)
+        if ( m == dst_IP )
           then
             break
         else
