@@ -68,8 +68,8 @@ function fetchmarks (policy, ipsets)
 end
 
 function testconntrack (f_mark, dst_IP, g_marks)
-  print(f_mark .. ' test function')
-  print(g_marks[tostring(f_mark)])
+  f_mark = tostring(f_mark)
+  print(f_mark)
   f_mark = (g_marks[f_mark])
   print(f_mark)
   local conn_reset = 0
