@@ -91,7 +91,7 @@ function pipeconntrack (marks)
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
-
+  print(marks[256])
   local conncmd = 'conntrack -E'
   local pipein  = assert(io.popen(conncmd,  'r'))
 
@@ -135,6 +135,6 @@ marks = fetchmarks(policy, ipsets)
 for i,v in ipairs(policy) do print(v) end
 for k,v in pairs(marks) do print(k, v) end
 
-print(marks[256])
+
 pipeconntrack(marks)
 pipein:close()
