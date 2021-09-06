@@ -69,8 +69,8 @@ end
 
 function testconntrack (mark, ip, marks)
   print(marks[mark])
-  f_mark = marks[mark]
-  conn_reset = 0
+  local f_mark = marks[mark]
+  local conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
   local conncheck = assert(io.popen(conncheckcmd, 'r'))
     for m in conncheck:lines() do
@@ -104,9 +104,9 @@ function pipeconntrack (marks)
     
     if (status == "NEW" and conn_arr [2] == "tcp")
        then
-        dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-        f_mark = string.gsub(conn_arr [15], "mark%=", "")
-        test_reset = testconntrack(f_mark, dst_IP, marks)
+        local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+        local f_mark = string.gsub(conn_arr [15], "mark%=", "")
+        local test_reset = testconntrack(f_mark, dst_IP, marks)
         
         print(test_reset)
         -- print("tcp flow ", dst_IP)
