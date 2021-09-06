@@ -68,8 +68,7 @@ function fetchmarks (policy, ipsets)
 end
 
 function testconntrack (mark, ip, marks_tab)
-  print(mark)
-  f_mark = marks_tab[mark]
+  f_mark = marks_tab.mark
   print(f_mark)
   conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
