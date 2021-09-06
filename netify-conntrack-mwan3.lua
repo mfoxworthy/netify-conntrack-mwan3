@@ -69,12 +69,16 @@ end
 
 function testconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
+  mark_check = 0
   print(f_mark)
   print(dst_IP)
   if (f_mark ~= nil)
     then
       sleep(1)
       for k, v in pairs(g_marks) do
+        if (tonumber(f_mark) ~= k)
+          then
+            mark_check = mark_check + 1
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
         print('Checking set ' .. v)
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
@@ -83,7 +87,6 @@ function testconntrack (f_mark, dst_IP, g_marks)
                 then
                   print('Found in set ' .. v .. " " .. k)
                   in_table = k
-              
               end
           end
       end
@@ -91,7 +94,10 @@ function testconntrack (f_mark, dst_IP, g_marks)
   if (in_table == nil)
     then
       print('Not in sets')
-  elseif (in_table ~= tonumber(f_mark))
+  elseif (mark_check = 2)
+    then
+      print('Mark not in sets')
+  else (in_table ~= tonumber(f_mark))
     then
       print('Found in wrong set ' .. f_mark .. " " .. in_table)
       conn_reset = 1
