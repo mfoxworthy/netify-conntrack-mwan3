@@ -69,7 +69,7 @@ end
 
 function testconntrack (mark, ip, g_marks)
   print(mark)
-  print(g_marks[mark])
+  print(g_marks[256])
   local f_mark = g_marks[mark]
   local conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
