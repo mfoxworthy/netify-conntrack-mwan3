@@ -72,10 +72,8 @@ function testconntrack (f_mark, dst_IP, g_marks)
   print(f_mark)
   print(dst_IP)
   f_mark = g_marks[tonumber(f_mark)]
-  if (f_mark == nil)
+  if (f_mark ~= nil)
     then
-      break
-  else
       sleep(5)
       local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
       local conncheck = assert(io.popen(conncheckcmd, 'r'))
