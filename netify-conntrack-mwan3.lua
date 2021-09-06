@@ -82,7 +82,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
           for m in conncheck:lines() do
               if ( m == dst_IP )
                 then
-                  print('Found in set ' .. v)
+                  print('Found in set ' .. v .. " " .. k)
                   in_table = k
               
               end
