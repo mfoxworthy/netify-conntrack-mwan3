@@ -131,11 +131,11 @@ function pipeconntrack ()
 end
 
 
-policy = fetchpolicy()
-ipsets = fetchipsets()
-marks = fetchmarks(policy, ipsets)
-for i,v in ipairs(policy) do print(v) end
-for k,v in pairs(marks) do print(k, v) end
+--policy = fetchpolicy()
+--ipsets = fetchipsets()
+--marks = fetchmarks(policy, ipsets)
+--for i,v in ipairs(policy) do print(v) end
+--for k,v in pairs(marks) do print(k, v) end
 
 
 pipeconntrack()
