@@ -76,7 +76,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
   if (f_mark ~= nil)
     then
       sleep(5)
-      for k, v pair(g_marks) do
+      for k, v in pair(g_marks) do
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
