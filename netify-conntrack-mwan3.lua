@@ -27,7 +27,7 @@ function reset (dst_IP, set)
   os.execute('ipset add ' .. set .. ' ' .. dst_IP)
 end
 
--- Function to get iptables rules
+-- Function to get iptables policy chain used by mwan3 for hooks
 
 function fetchpolicy ()
   local polcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
@@ -41,6 +41,9 @@ function fetchpolicy ()
   return pols
 end
 
+-- Funtion that fetches the rules from iptables -- Helper to figure out the ipsets mwan3 puts in.
+-- We could have grabbed them from Netify configs but we wouldn't know the mark
+
 function fetchipsets ()
   local ipsetcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $7}\''
   local getsets = assert(io.popen(ipsetcmd, 'r'))
@@ -53,7 +56,8 @@ function fetchipsets ()
   return sets
 end
 
-  
+-- Funtion to get marks from policies.
+
 function fetchmarks (policy, ipsets)
   marks = {}
   for i, v in ipairs(policy) do
@@ -68,9 +72,12 @@ function fetchmarks (policy, ipsets)
   return marks
 end
 
+-- Heavy lifter funtion to test all flows then call the reset helper that resets flows and add the ip to the correct set.
+-- If we have bugs, this is where we will find them :)
+
 function fixconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
-  mark_check = 0
+  mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
   print(f_mark)
   print(dst_IP)
