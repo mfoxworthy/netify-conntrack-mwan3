@@ -109,7 +109,7 @@ ipsets = fetchipsets()
 marks = fetchmarks(policy)
 for i,v in ipairs(policy) do print(v) end
 for i,v in ipairs(ipsets) do print(v) end
-for i,v in ipairs(marks) do print(v) end
+for i,v in ipairs(marks) do print(tonumber(v ,10)) end
 
 pipeconntrack()
 pipein:close()
