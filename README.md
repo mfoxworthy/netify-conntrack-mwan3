@@ -77,6 +77,6 @@ This doesn't need to be high speed. In fact we may actually want to sit a few se
 
 # Required Packages - OpenWRT
   
-opkg install conntrack ipset lua
+opkg install conntrack ipset lua luaposix
 
 
