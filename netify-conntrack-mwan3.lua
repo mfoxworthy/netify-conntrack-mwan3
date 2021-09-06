@@ -58,7 +58,9 @@ function fetchmarks(policy, ipsets)
   
   for i, v in ipairs(policy) do
     k = ipsets[i]
-    print(k)
+    marks[i] = k
+    for key, val in ipairs(marks) do print(k) end
+    
     local markcmd = assert(io.popen('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'), 'r')
       for m in markcmd:lines() do
         marks.k = m 
