@@ -61,6 +61,7 @@ function fetchmarks(policy, ipsets)
     
     for m in markcmd:lines() do
       s = ipsets[count]
+      print(s)
       marks.s = m
     end
     count = count +1
