@@ -71,7 +71,6 @@ function testconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
   print(f_mark)
   print(dst_IP)
-  f_mark = g_marks[tonumber(f_mark)]
   if (f_mark ~= nil)
     then
       sleep(1)
