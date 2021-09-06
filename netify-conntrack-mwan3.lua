@@ -104,7 +104,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
     then
       print('Found in wrong set ' .. f_mark .. " " .. in_table)
       reset(dst_IP)
-      os.execute('ipset add ' .. g_marks[tonumber(f_mark)] .. ' ' .. dest_IP)
+      os.execute('ipset add ' .. g_marks[tonumber(f_mark)] .. ' ' .. dst_IP)
       
   end
   return conn_reset
