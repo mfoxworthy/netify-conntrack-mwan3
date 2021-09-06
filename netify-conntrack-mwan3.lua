@@ -88,13 +88,14 @@ end
 
 function fixconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
+  local famrk = tonumber(f_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
   if (f_mark ~= nil)
     then
       -- sleep(1)
       for k, v in pairs(g_marks) do
-        if (tonumber(f_mark) ~= k)
+        if (f_mark) ~= k)
           then
             mark_check = mark_check + 1
         end
@@ -121,9 +122,9 @@ function fixconntrack (f_mark, dst_IP, g_marks)
     then
   elseif (mark_check == set_count)
     then
-  elseif (in_table ~= tonumber(f_mark))
+  elseif (in_table ~= f_mark)
     then
-      local set = g_marks[tonumber(f_mark)]
+      local set = g_marks[f_mark]
       local del_set = g_marks[in_table]
       flow_reset(dst_IP, set, del_set)
       
