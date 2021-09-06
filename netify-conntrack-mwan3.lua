@@ -101,6 +101,7 @@ function pipeconntrack()
     end
     pipein:flush()    
   end
+  
 end
 
 
@@ -113,4 +114,3 @@ for k,v in pairs(marks) do print(k, v) end
 
 pipeconntrack()
 pipein:close()
-getrules:close()
