@@ -94,7 +94,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
   if (in_table == nil)
     then
       print('Not in sets')
-  elseif (mark_check = 2)
+  elseif (mark_check == 2)
     then
       print('Mark not in sets')
   else (in_table ~= tonumber(f_mark))
