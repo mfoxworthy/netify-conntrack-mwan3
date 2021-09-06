@@ -60,7 +60,7 @@ function fetchmarks(policy, ipsets)
     
     for m in markcmd:lines() do
       s = ipsets[i]
-      marks.s = tonumber(m, 10)
+      marks.s = m
     end
   markcmd:flush()
   markcmd:close()
