@@ -71,7 +71,7 @@ function testconntrack (mark, ip, marks_tab)
   f_mark = marks_tab[mark]
   conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
-  local conncheck = assert(io.popen(conncheckcmd, 'r')
+  local conncheck = assert(io.popen(conncheckcmd, 'r'))
     for m in conncheck:lines() do
       print(m)
       print(ip)
