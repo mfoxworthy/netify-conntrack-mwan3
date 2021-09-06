@@ -158,7 +158,7 @@ function pipeconntrack (marks)
             local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
             os.execute('logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP)
             local f_mark = string.gsub(conn_arr [15], "mark%=", "")
-            if (f_mark ~= nil) -- need to figure out the empty ones but for now we'll ride through it.
+            if (f_mark == nil) -- need to figure out the empty ones but for now we'll ride through it.
               then
                 os.execute('logger -p err -t conntrack_fix \"No tag found\"')
             end
