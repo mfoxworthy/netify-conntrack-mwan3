@@ -68,10 +68,9 @@ function fetchmarks (policy, ipsets)
 end
 
 function testconntrack (f_mark, dst_IP, g_marks)
-  f_mark = tostring(f_mark)
-  print(f_mark)
-  f_mark = (g_marks[f_mark])
-  print(f_mark)
+  print(g_marks[f_mark])
+  
+  f_mark = print(g_marks[f_mark])
   local conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
   print(conncheckcmd)
@@ -109,7 +108,6 @@ function pipeconntrack (marks)
        then
         local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
         local f_mark = string.gsub(conn_arr [15], "mark%=", "")
-        print(f_mark)
         local test_reset = testconntrack(f_mark, dst_IP, marks)
         
         print(test_reset)
