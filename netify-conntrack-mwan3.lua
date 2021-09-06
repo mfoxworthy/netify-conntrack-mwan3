@@ -91,7 +91,7 @@ function pipeconntrack (marks)
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
-  print(marks[256])
+  
   local conncmd = 'conntrack -E'
   local pipein  = assert(io.popen(conncmd,  'r'))
 
@@ -108,7 +108,7 @@ function pipeconntrack (marks)
         f_mark = string.gsub(conn_arr [15], "mark%=", "")
         print('main function fmark ' .. f_mark)
         test_reset = testconntrack(f_mark, dst_IP, marks)
-        print(marks.f_mark)
+        print(marks[f_mark])
         print(test_reset)
         -- print("tcp flow ", dst_IP)
         --reset(dst_IP)
