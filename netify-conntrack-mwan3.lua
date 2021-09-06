@@ -76,8 +76,8 @@ function testconntrack (f_mark, dst_IP, g_marks)
   print(conncheckcmd)
   local conncheck = assert(io.popen(conncheckcmd, 'r'))
     for m in conncheck:lines() do
-      print(m)
-      print(dst_IP)
+      print('table IP ' .. m)
+      print('Tested IP ' .. dst_IP)
         if ( m == dst_IP )
           then
             break
