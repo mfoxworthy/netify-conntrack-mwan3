@@ -67,7 +67,7 @@ function fetchmarks (policy, ipsets)
   return marks
 end
 
-function testconntrack (f_mark, dst_IP, g_marks)
+function fixconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
   mark_check = 0
   set_count = 0
@@ -133,7 +133,7 @@ function pipeconntrack (marks)
            then
             local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
             local f_mark = string.gsub(conn_arr [15], "mark%=", "")
-            local test_reset = testconntrack(f_mark, dst_IP, marks)
+            local test_reset = fixconntrack(f_mark, dst_IP, marks)
             
             print(test_reset)
             -- print("tcp flow ", dst_IP)
