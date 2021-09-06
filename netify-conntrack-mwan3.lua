@@ -101,7 +101,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
         end
         set_count = set_count + 1
         local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
-        if (logging =1)
+        if (logging == 1)
           then
             os.execute('logger \'Checking set \'' .. v)
         end
