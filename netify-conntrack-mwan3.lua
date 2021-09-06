@@ -182,7 +182,7 @@ end
 -- Set tables up at start so we don't keep looking at static data.
 policy = fetchpolicy()
 ipsets = fetchipsets()
-marks = fetchmarks(policy, ipsets
+marks = fetchmarks(policy, ipsets)
 
 -- Kick things off.
 
