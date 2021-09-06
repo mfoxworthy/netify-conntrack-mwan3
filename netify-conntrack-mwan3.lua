@@ -120,13 +120,13 @@ function fixconntrack (f_mark, dst_IP, g_marks)
   end
   if (in_table == nil)
     then
-      print('Not in sets')
+      --print('Not in sets')
   elseif (mark_check == set_count)
     then
-      print('Mark not in sets')
+      --print('Mark not in sets')
   elseif (in_table ~= tonumber(f_mark))
     then
-      print('Found in wrong set ' .. f_mark .. " " .. in_table)
+      -- print('Found in wrong set ' .. f_mark .. " " .. in_table)
       local set = g_marks[tonumber(f_mark)]
       local del_set = g_marks[in_table]
       flow_reset(dst_IP, set, del_set)
