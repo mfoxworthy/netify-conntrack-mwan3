@@ -69,23 +69,30 @@ end
 
 function testconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
+  local in_table = 0
   print(f_mark)
   print(dst_IP)
   f_mark = g_marks[tonumber(f_mark)]
   if (f_mark ~= nil)
     then
       sleep(5)
-      local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
-      local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        for m in conncheck:lines() do
-          print('table IP ' .. m)
-          if ( m ~= dst_IP )
-            then
-              conn_reset = 1
+      for k, v pair(g_marks) do
+        local conncheckcmd = 'ipset list ' .. v .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
+        local conncheck = assert(io.popen(conncheckcmd, 'r'))
+          for m in conncheck:lines() do
+            print('table IP ' .. m)
+              if ( m == dst_IP )
+                then
+                  in_table = k
+              end
           end
-        end
-    end
-    return conn_reset
+      end
+  end
+  if (f_mark ~= in_table)
+    then
+      conn_reset = 1
+  end
+  return conn_reset
 end
 
 function pipeconntrack (marks)
