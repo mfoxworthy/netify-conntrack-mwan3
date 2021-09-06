@@ -67,8 +67,8 @@ function fetchmarks (policy, ipsets)
   return marks
 end
 
-function testconntrack (mark, ip, marks_tab)
-  print(marks_tab.mark)
+function testconntrack (mark, ip, marks)
+  print(marks.mark)
   f_mark = marks_tab.mark
   conn_reset = 0
   local conncheckcmd = 'ipset list ' .. f_mark .. ' | grep timeout | grep -v Header | awk \'{print $1}\''
@@ -101,12 +101,11 @@ function pipeconntrack (marks)
     
     -- We need to know if the NEW connection is TCP or UDP.
     -- conntrack formats these lines differently
-    print(marks[256])
+    
     if (status == "NEW" and conn_arr [2] == "tcp")
        then
         dst_IP = string.gsub(conn_arr [7], "dst%=", "")
         f_mark = string.gsub(conn_arr [15], "mark%=", "")
-        print('main function fmark ' .. f_mark)
         test_reset = testconntrack(f_mark, dst_IP, marks)
         
         print(test_reset)
