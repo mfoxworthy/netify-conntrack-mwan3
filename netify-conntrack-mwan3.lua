@@ -109,7 +109,7 @@ function pipeconntrack (marks)
        then
         local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
         local f_mark = string.gsub(conn_arr [15], "mark%=", "")
-        pring(f_mark)
+        print(f_mark)
         local test_reset = testconntrack(f_mark, dst_IP, marks)
         
         print(test_reset)
