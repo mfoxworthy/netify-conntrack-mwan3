@@ -111,35 +111,36 @@ function pipeconntrack (marks)
   for line in pipein:lines() do
     conn_arr = split(line)
     
-    if (conn_arr [1] ~= nil) do
-    status = string.gsub(conn_arr [1], "%A", "")
+    if (conn_arr [1] ~= nil)
+      then
+        status = string.gsub(conn_arr [1], "%A", "")
     
     -- We need to know if the NEW connection is TCP or UDP.
     -- conntrack formats these lines differently
     
-      if (status == "NEW" and conn_arr [2] == "tcp")
-         then
-          local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-          local f_mark = string.gsub(conn_arr [15], "mark%=", "")
-          local test_reset = testconntrack(f_mark, dst_IP, marks)
-          if (test_reset == 1)
-            then
-              reset(dst_IP)
-          end
-          print(test_reset)
-          -- print("tcp flow ", dst_IP)
-          --reset(dst_IP)
-      elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
-          then
-            if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
+        if (status == "NEW" and conn_arr [2] == "tcp")
+           then
+            local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+            local f_mark = string.gsub(conn_arr [15], "mark%=", "")
+            local test_reset = testconntrack(f_mark, dst_IP, marks)
+            if (test_reset == 1)
               then
-                dport = string.gsub(conn_arr [8], "dport%=", "")
-                dst_IP = string.gsub(conn_arr [6], "dst%=", "")
-                
-                -- print("udp flow ", dst_IP, " ", dport)
-                
+                reset(dst_IP)
             end
-      end
+            print(test_reset)
+            -- print("tcp flow ", dst_IP)
+            --reset(dst_IP)
+        elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
+            then
+              if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
+                then
+                  dport = string.gsub(conn_arr [8], "dport%=", "")
+                  dst_IP = string.gsub(conn_arr [6], "dst%=", "")
+                  
+                  -- print("udp flow ", dst_IP, " ", dport)
+                  
+              end
+        end
     end
     pipein:flush()    
   end
