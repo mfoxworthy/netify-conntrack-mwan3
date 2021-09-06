@@ -155,7 +155,10 @@ function pipeconntrack (marks)
         if (status == "NEW" and conn_arr [2] == "tcp")
            then
             local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-            local f_mark = string.gsub(conn_arr [15], "mark%=", "")
+            if (f_mark ~= nil) -- need to figure out the empty ones but for now we'll ride through it.
+              then
+                local f_mark = string.gsub(conn_arr [15], "mark%=", "")
+              end
             local test_reset = fixconntrack(f_mark, dst_IP, marks)
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
             then
