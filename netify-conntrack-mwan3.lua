@@ -61,7 +61,7 @@ function fetchmarks(policy, ipsets)
     print(k)
     local markcmd = assert(io.popen('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'), 'r')
       for m in markcmd:lines() do
-        marks.tostring(k) = m 
+        marks.k = m 
       end
       markcmd:flush()
       markcmd:close()
