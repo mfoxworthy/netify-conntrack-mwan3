@@ -120,7 +120,10 @@ function pipeconntrack (marks)
         local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
         local f_mark = string.gsub(conn_arr [15], "mark%=", "")
         local test_reset = testconntrack(f_mark, dst_IP, marks)
-        
+        if (test_reset == 1)
+          then
+            reset(dst_IP)
+        end
         print(test_reset)
         -- print("tcp flow ", dst_IP)
         --reset(dst_IP)
