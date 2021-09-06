@@ -89,7 +89,7 @@ function testconntrack (f_mark, dst_IP, g_marks)
           end
       end
   end
-  if (in_table ~= nil and f_mark ~= in_table)
+  if (in_table ~= nil and f_mark == in_table)
     then
       print('Found in wrong set')
       conn_reset = 1
