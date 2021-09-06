@@ -84,7 +84,7 @@ function fixconntrack (f_mark, dst_IP, g_marks)
   print(dst_IP)
   if (f_mark ~= nil)
     then
-      sleep(1)
+      -- sleep(1)
       for k, v in pairs(g_marks) do
         if (tonumber(f_mark) ~= k)
           then
