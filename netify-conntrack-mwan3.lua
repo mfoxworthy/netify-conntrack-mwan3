@@ -69,7 +69,6 @@ end
 
 function testconntrack (f_mark, dst_IP, g_marks)
   local conn_reset = 0
-  local in_table = 0
   print(f_mark)
   print(dst_IP)
   f_mark = g_marks[tonumber(f_mark)]
@@ -86,11 +85,14 @@ function testconntrack (f_mark, dst_IP, g_marks)
                 then
                   print('In Table ' .. k)
                   in_table = k
+              else
+                
+                print('Not in table')
               end
           end
       end
   end
-  if (f_mark ~= in_table)
+  if (in_table ~= nil and f_mark ~= in_table)
     then
       conn_reset = 1
   end
