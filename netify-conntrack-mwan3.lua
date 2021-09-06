@@ -32,8 +32,8 @@ end
 
 function flow_reset (dst_IP, set, del_set)
   local reset = "conntrack -D -d " .. dst_IP
-  os.execute('ipset del ' .. del_set .. ' ' .. dst_IP)
-  os.execute('ipset add ' .. set .. ' ' .. dst_IP)
+  os.execute('ipset del -exist ' .. del_set .. ' ' .. dst_IP)
+  os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
   os.execute('logger -p notice -t conntrack_fix \'Made ipset correction for \'' .. dst_IP)
