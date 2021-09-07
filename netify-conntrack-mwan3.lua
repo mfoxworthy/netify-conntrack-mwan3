@@ -120,7 +120,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         for m in conncheck:lines() do
           if ( m == dst_IP )
             then
-              logger(1, 'logger -p notice -t conntrack_fix \'Found in set \'' .. v .. ' ' .. k)
+              logger(1, '\'Found in set \'' .. v .. ' ' .. k)
               in_table = k    
           end
         end
@@ -149,7 +149,6 @@ function pipeconntrack (nf_mark)
   local pipein  = assert(io.popen(conncmd,  'r'))
   for line in pipein:lines() do
     conn_arr = split(line)
-    pipein:close()
     if (conn_arr [1] ~= nil)
       then
         status = string.gsub(conn_arr [1], "%A", "")
@@ -163,10 +162,10 @@ function pipeconntrack (nf_mark)
             
             if (string.gsub(conn_arr [15], "mark%=", "") == nil) -- need to figure out the empty ones but for now we'll ride through it.
               then
-                logger(1, 'logger -p err -t conntrack_fix \"No tag found\"')
+                logger(1, '\"No tag found\"')
             else
               flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-              logger(1, 'logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP .. ' ' .. flow_mark)
+              logger(1, '\"New flow detected\" ' .. dst_IP .. ' ' .. flow_mark)
             end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
@@ -182,7 +181,6 @@ function pipeconntrack (nf_mark)
 end
 
 -- Set tables up at start so we don't keep looking at static data.
-logging = 1
 policy = fetchpolicy()
 ipsets = fetchipsets()
 nf_marks = fetchmarks(policy, ipsets)
