@@ -21,11 +21,14 @@ end
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 function logger (level, message)
   if (level == 7)
-     prior = 'debug'
+    then
+      prior = 'debug'
   elseif (level == 5)
-    prior = 'err'
+    then
+      prior = 'err'
   elseif (level == 1)
-    prior = 'notice'
+    then
+      prior = 'notice'
   end
   os.execute('logger -p ' .. prior .. ' -t conntrack_fix ' .. message ..)
     
