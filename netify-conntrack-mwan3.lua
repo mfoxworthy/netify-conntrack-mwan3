@@ -106,34 +106,27 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
   set_count = 0
   if (flow_mark ~= nil)
     then
-      -- sleep(1)
       for k, v in pairs(nf_mark) do
         if (flow_mark ~= k)
           then
             mark_check = mark_check + 1
         end
+        
         set_count = set_count + 1
+        
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        if (logging == 1)
-          then
-            logger(1, '\'Checking set \'' .. v)
-        end
-          for m in conncheck:lines() do
-              if ( m == dst_IP )
-                then
-                  if (logging == 1)
-                    then
-                      os.execute('logger -p notice -t conntrack_fix \'Found in set \'' .. v .. " " .. k)
-                  end
-                  in_table = k
-                  conncheck:close()
-              end
-              
-              
+        logger(1, '\'Checking set \'' .. v)
+        for m in conncheck:lines() do
+          if ( m == dst_IP )
+            then
+              os.execute('logger -p notice -t conntrack_fix \'Found in set \'' .. v .. " " .. k)
+              conncheck:close()
+              in_table = k    
           end
+        end
       end
-  end
+    end
   if (in_table == nil)
     then
   elseif (mark_check == set_count)
