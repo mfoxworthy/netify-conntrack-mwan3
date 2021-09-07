@@ -87,16 +87,16 @@ end
 -- Heavy lifter funtion to test all flows then call the reset helper that resets flows and add the ip to the correct set.
 -- If we have bugs, this is where we will find them :)
 
-function fixconntrack (f_mark, dst_IP, g_mark)
+function fixconntrack (flow_mark, dst_IP, nf_mark)
   local conn_reset = 0
-  f_mark = tonumber(f_mark)
+  flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
-  if (f_mark ~= nil)
+  if (flow_mark ~= nil)
     then
       -- sleep(1)
-      for k, v in pairs(g_mark) do
-        if (f_mark ~= k)
+      for k, v in pairs(nf_mark) do
+        if (flow_mark ~= k)
           then
             mark_check = mark_check + 1
         end
@@ -123,10 +123,10 @@ function fixconntrack (f_mark, dst_IP, g_mark)
     then
   elseif (mark_check == set_count)
     then
-  elseif (in_table ~= f_mark)
+  elseif (in_table ~= flow_mark)
     then
-      local set = g_mark[in_table]
-      local del_set = g_mark[f_mark]
+      local set = nf_mark[in_table]
+      local del_set = nf_mark[flow_mark]
       flow_reset(dst_IP, set, del_set)
       
       
@@ -134,7 +134,7 @@ function fixconntrack (f_mark, dst_IP, g_mark)
   return conn_reset
 end
 
-function pipeconntrack (marks)
+function pipeconntrack (nf_mark)
 
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
@@ -161,11 +161,11 @@ function pipeconntrack (marks)
               then
                 os.execute('logger -p err -t conntrack_fix \"No tag found\"')
             else
-              f_mark = string.gsub(conn_arr [15], "mark%=", "")
+              flow_mark = string.gsub(conn_arr [15], "mark%=", "")
             end
             
               
-            local test_reset = fixconntrack(f_mark, dst_IP, marks)
+            lfixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
             then
               if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
@@ -184,11 +184,11 @@ end
 logging = 1
 policy = fetchpolicy()
 ipsets = fetchipsets()
-marks = fetchmarks(policy, ipsets)
+nf_marks = fetchmarks(policy, ipsets)
 
 -- Kick things off.
 
-pipeconntrack(marks)
+pipeconntrack(nf_marks)
 
 -- Close it all down
 
