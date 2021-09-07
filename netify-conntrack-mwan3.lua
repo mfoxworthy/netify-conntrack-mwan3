@@ -62,8 +62,7 @@ function fetchpolicy ()
   for policy in getpols:lines() do
     table.insert(pols, policy)
   end
-  getpols:flush()
-  getpols:close()
+  
   return pols
 end
 
@@ -77,8 +76,7 @@ function fetchipsets ()
   for set in getsets:lines() do
     table.insert(sets, set)
   end
-  getsets:flush()
-  getsets:close()
+  
   return sets
 end
 
@@ -92,8 +90,7 @@ function fetchmarks (policy, ipsets)
       for m in markcmd:lines() do
         marks[tonumber(m, 10)] = k
       end
-    markcmd:flush()
-    markcmd:close()
+    
   end
   return marks
 end
@@ -195,7 +192,7 @@ function pipeconntrack (nf_mark)
     end
         
   end
-  pipein:flush()
+  
   
   
 end
@@ -218,8 +215,8 @@ function detach_conntrack()
 end
 
 
--- detach_conntrack()
-pipeconntrack(nf_marks)
+detach_conntrack()
+--pipeconntrack(nf_marks)
 -- Close it all down
 
 
