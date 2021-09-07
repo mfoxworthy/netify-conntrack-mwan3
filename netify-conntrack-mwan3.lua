@@ -30,7 +30,7 @@ function logger (level, message)
     then
       prior = 'notice'
   end
-  os.execute('logger -p ' .. prior .. ' -t conntrack_fix ' .. message ..)
+  os.execute('logger -p ' .. prior .. ' -t conntrack_fix ' .. message)
     
 function split (line)
   words = {}
