@@ -41,7 +41,7 @@ function logger (level, message)
   logopt = loglvl_arr[level]
   if logopt ~= nil
     then
-      logopt()
+      logopt(message)
   else
     nolog()
   end
