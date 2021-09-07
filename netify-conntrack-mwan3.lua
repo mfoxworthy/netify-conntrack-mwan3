@@ -83,16 +83,16 @@ end
 -- Funtion to get marks from policies.
 
 function fetchmarks (policy, ipsets)
-  markcmd = 'iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'
-  local getmarks = assert(io.popen(markcmd, 'r'))
   marks = {}
   for i, v in ipairs(policy) do
+    local markcmd = 'iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'
+    local getmarks = assert(io.popen(markcmd, 'r'))
     k = ipsets[i]
     for m in markcmd:lines() do
       marks[tonumber(m, 10)] = k
     end
+    getmarks:close()
   end
-  getmarks:close()
   return marks
 end
 
