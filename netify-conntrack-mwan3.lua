@@ -88,7 +88,7 @@ function fetchmarks (policy, ipsets)
     local markcmd = 'iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'
     local getmarks = assert(io.popen(markcmd, 'r'))
     k = ipsets[i]
-    for m in markcmd:lines() do
+    for m in getmarks:lines() do
       marks[tonumber(m, 10)] = k
     end
     getmarks:close()
