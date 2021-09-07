@@ -4,7 +4,11 @@ I tested several options however, the single biggest factor is how long the entr
 
 # Time To Live settings
 
-All this said, I turned off the ttl in Netify. This completely stablized the network. There is a growing list of entries in each of the lists. But, if an IP is used for an application meant for the other network, I still move it. So list growth isn't really a concern. However, if it becomes a concern we just need to make the ttl something really long like 48 hours.
+All this said, I turned off the ttl in Netify. This completely stablized the network. There is a growing list of entries in each of the lists. But, if an IP is used for an application meant for the other network, I still move it. So list growth isn't really a concern. However, if it becomes a concern we just need to make the ttl something really long like 48 hours. After testing for 24 hours the list, in my enviroment grew to
+
+227 - Network with the fewest rules but has streaming media configured
+
+424 - Network with all the buisness apps and interactive apps like chat.
 
 # Interface detection
 
