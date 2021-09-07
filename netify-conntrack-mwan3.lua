@@ -87,9 +87,9 @@ end
 -- Heavy lifter funtion to test all flows then call the reset helper that resets flows and add the ip to the correct set.
 -- If we have bugs, this is where we will find them :)
 
-function fixconntrack (f_mark, dst_IP, g_marks)
+function fixconntrack (f_mark, dst_IP, g_mark)
   local conn_reset = 0
-  local f_mark = tonumber(f_mark)
+  f_mark = tonumber(f_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
   if (f_mark ~= nil)
@@ -125,8 +125,8 @@ function fixconntrack (f_mark, dst_IP, g_marks)
     then
   elseif (in_table ~= f_mark)
     then
-      local set = g_marks[f_mark]
-      local del_set = g_marks[in_table]
+      local set = g_mark[in_table]
+      local del_set = g_mark[f_mark]
       flow_reset(dst_IP, set, del_set)
       
       
