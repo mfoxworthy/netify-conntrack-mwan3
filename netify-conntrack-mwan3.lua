@@ -22,17 +22,20 @@ end
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 function loglvl1(message)
  os.execute('logger -p notice -t conntrack_fix ' .. message)
+end
  
 function loglvl2(message)
  os.execute('logger -p err -t conntrack_fix ' .. message)
- 
+end
+
 function loglvl3(message)
  os.execute('logger -p debug -t conntrack_fix ' .. message)
- 
+end
+
 function nolog()
   end
  
- loglvl_arr = {loglvl1, loglvl2, loglvl3}
+loglvl_arr = {loglvl1, loglvl2, loglvl3}
 
 function logger (level, message)
   logopt = loglvl_arr[level]
@@ -41,6 +44,7 @@ function logger (level, message)
       logopt()
   else
     nolog()
+  end
 end
 
 function split (line)
