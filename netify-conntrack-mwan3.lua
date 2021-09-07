@@ -8,9 +8,11 @@
 -- the entries from the ipsets. It will add the entry to the correct ipset rule. The next time
 -- the connection is tried it will take the correct path.
 
--- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
+
 local posix = require "posix"
 local logging_level = 1
+
+-- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 
 function sleep (n)
     local t = os.clock()
@@ -45,10 +47,9 @@ function nolog()
 loglvl_arr = {loglvl1, loglvl2, loglvl3}
 
 function logger (level, message)
-  logopt = loglvl_arr[level]
-  if logopt ~= nil
-    then
-      logopt(message)
+  loglvl = loglvl_arr[level]
+  if (loglvl ~= nil and logging_level ~= 0) then
+    loglvl(message)
   else
     nolog()
   end
