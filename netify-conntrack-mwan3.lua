@@ -218,7 +218,8 @@ function detach_conntrack()
 end
 
 
-detach_conntrack()
+-- detach_conntrack()
+pipeconntrack(nf_marks)
 -- Close it all down
 
 
