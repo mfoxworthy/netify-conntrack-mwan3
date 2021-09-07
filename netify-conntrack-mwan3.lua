@@ -132,7 +132,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
                   
               end
               
-              conncheck:close()
+              
           end
       end
   end
