@@ -45,7 +45,7 @@ end
 -- Function to reset flow
 
 function flow_reset (dst_IP, set, del_set)
-  local reset = 'conntrack -D -d ' .. dst_IP .. ' \>/dev/null'
+  local reset = 'conntrack -D -d ' .. dst_IP .. ' \>/dev/null 2\>\&1'
   os.execute('ipset del -exist ' .. del_set .. ' ' .. dst_IP)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
