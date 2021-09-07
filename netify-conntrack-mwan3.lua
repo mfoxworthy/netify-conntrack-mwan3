@@ -129,8 +129,9 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
                       os.execute('logger -p notice -t conntrack_fix \'Found in set \'' .. v .. " " .. k)
                   end
                   in_table = k
-                  conncheck:flush()
+                  
               end
+              
               conncheck:close()
           end
       end
