@@ -9,6 +9,7 @@
 -- the connection is tried it will take the correct path.
 
 -- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
+local posix = require "posix"
 
 function sleep (n)
     local t = os.clock()
@@ -201,8 +202,15 @@ ipsets = fetchipsets()
 nf_marks = fetchmarks(policy, ipsets)
 
 -- Kick things off.
+function detach_conntrack()
+    local pid = posix.fork()
 
-pipeconntrack(nf_marks)
+    if pid == 0 then -- this is the child process
+      pipeconntrack(nf_marks)
+    else             -- this is the parent process
+        -- nothing
+    end
+end
 
 -- Close it all down
 
