@@ -20,18 +20,27 @@ end
 
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
-function logger (level, message)
-  if (level == 7)
-    then
-      prior = 'debug'
-  elseif (level == 5)
-    then
-      prior = 'err'
-  elseif (level == 1)
-    then
-      prior = 'notice'
+function loglvl1(message)
+ os.execute('logger -p notice -t conntrack_fix ' .. message)
+ 
+function loglvl2(message)
+ os.execute('logger -p err -t conntrack_fix ' .. message)
+ 
+function loglvl3(message)
+ os.execute('logger -p debug -t conntrack_fix ' .. message)
+ 
+function nolog()
   end
-  os.execute('logger -p ' .. prior .. ' -t conntrack_fix ' .. message)
+ 
+ loglvl_arr = {loglvl1, loglvl2, loglvl3}
+
+function logger (level, message)
+  logopt = loglvl_arr[level]
+  if logopt ~= nil
+    then
+      logopt()
+  else
+    nolog()
 end
 
 function split (line)
@@ -115,7 +124,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(1, '\'Checking set \'' .. v)
+        logger(3, '\'Checking set \'' .. v)
         for m in conncheck:lines() do
           if ( m == dst_IP )
             then
