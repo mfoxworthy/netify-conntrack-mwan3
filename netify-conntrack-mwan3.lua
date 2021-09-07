@@ -10,6 +10,7 @@
 
 -- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 local posix = require "posix"
+local logging_level = 1
 
 function sleep (n)
     local t = os.clock()
@@ -21,15 +22,21 @@ end
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 function loglvl1(message)
- os.execute('logger -p notice -t conntrack_fix ' .. message)
+ if (logging_level == 1) then
+  os.execute('logger -p notice -t conntrack_fix ' .. message)
+ end
 end
  
 function loglvl2(message)
- os.execute('logger -p err -t conntrack_fix ' .. message)
+  if (logging_level == 2) then
+    os.execute('logger -p err -t conntrack_fix ' .. message)
+  end
 end
 
 function loglvl3(message)
- os.execute('logger -p debug -t conntrack_fix ' .. message)
+  if (logging_level == 3) then
+    os.execute('logger -p debug -t conntrack_fix ' .. message)
+  end
 end
 
 function nolog()
@@ -116,13 +123,11 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
-  if (flow_mark ~= nil)
-    then
-      for k, v in pairs(nf_mark) do
-        if (flow_mark ~= k)
-          then
-            mark_check = mark_check + 1
-        end
+  if (flow_mark ~= nil) then
+    for k, v in pairs(nf_mark) do
+      if (flow_mark ~= k) then
+        mark_check = mark_check + 1
+      end
         
         set_count = set_count + 1
         
@@ -130,23 +135,20 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(3, '\'Checking set \'' .. v)
         for m in conncheck:lines() do
-          if ( m == dst_IP )
-            then
-              logger(1, 'Found in ipset IPSET=' .. v .. ' NF_MARK=' .. k)
-              in_table = k -- reassinment for readablility    
+          if ( m == dst_IP ) then
+            logger(1, 'Found in ipset IPSET=' .. v .. ' NF_MARK=' .. k)
+            in_table = k -- reassinment for readablility    
           end
         end
       end
     end
-  if (in_table == nil) -- mark wasn't found in any ipsets
-    then
-  elseif (mark_check == set_count)
-    then
-  elseif (in_table ~= flow_mark) -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
-    then
-      local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
-      local del_set = nf_mark[flow_mark]
-      flow_reset(dst_IP, set, del_set)
+  if (in_table == nil) then -- mark wasn't found in any ipsets
+    logger(3, 'Not found in ipsets...')
+  elseif (mark_check == set_count) then
+  elseif (in_table ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
+    local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
+    local del_set = nf_mark[flow_mark]
+    flow_reset(dst_IP, set, del_set)
   end
 end
 
@@ -160,32 +162,28 @@ function pipeconntrack (nf_mark)
   local pipein  = assert(io.popen(conncmd,  'r'))
   for line in pipein:lines() do
     conn_arr = split(line)
-    if (conn_arr [1] ~= nil)
-      then
-        status = string.gsub(conn_arr [1], "%A", "")
+    if (conn_arr [1] ~= nil) then
+      status = string.gsub(conn_arr [1], "%A", "")
     
         -- We need to know if the NEW connection is TCP or UDP.
         -- conntrack formats these lines differently
     
-        if (status == "NEW" and conn_arr [2] == "tcp")
-          then
-            dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-            
-            if (string.gsub(conn_arr [15], "mark%=", "") == nil) -- need to figure out the empty ones but for now we'll ride through it.
-              then
-                logger(1, '\"No tag found\"')
-            else
-              flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-              logger(1, '\'New flow detected\' IP=' .. dst_IP .. ' NF_MARK=' .. flow_mark)
-            end
+        if (status == "NEW" and conn_arr [2] == "tcp") then
+          dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+          if (string.gsub(conn_arr [15], "mark%=", "") == nil) then -- need to figure out the empty ones but for now we'll ride through it.
+              logger(1, '\"No tag found\"')
+          else
+            flow_mark = string.gsub(conn_arr [15], "mark%=", "")
+            logger(1, '\'New flow detected\' IP=' .. dst_IP .. ' NF_MARK=' .. flow_mark)
+          end
             fixconntrack(flow_mark, dst_IP, nf_mark)
-        elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
-          then
-            if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
-              then
-                dport = string.gsub(conn_arr [8], "dport%=", "")
-                dst_IP = string.gsub(conn_arr [6], "dst%=", "")                  
-            end
+        elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
+          if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) then
+            dport = string.gsub(conn_arr [8], "dport%=", "")
+            dst_IP = string.gsub(conn_arr [6], "dst%=", "")
+          end
+        else
+          logger(3, 'Connection is not TCP or UDP')
         end
     end
   end
