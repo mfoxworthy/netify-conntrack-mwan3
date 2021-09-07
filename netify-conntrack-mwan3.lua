@@ -63,7 +63,6 @@ function fetchpolicy ()
     table.insert(pols, policy)
   end
   getpols:close()  
-  
   return pols
 end
 
@@ -77,22 +76,23 @@ function fetchipsets ()
   for set in getsets:lines() do
     table.insert(sets, set)
   end
-  
+  getsets:close()
   return sets
 end
 
 -- Funtion to get marks from policies.
 
 function fetchmarks (policy, ipsets)
+  local markcmd = 'iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'
+  local getmarks = assert(io.popen(markcmd, 'r')
   marks = {}
   for i, v in ipairs(policy) do
     k = ipsets[i]
-    local markcmd = assert(io.popen('iptables -L ' .. v .. ' -t mangle | grep MARK | awk \'{print $16}\' | cut -c -5'), 'r')
-      for m in markcmd:lines() do
-        marks[tonumber(m, 10)] = k
-      end
-    
+    for m in markcmd:lines() do
+      marks[tonumber(m, 10)] = k
+    end
   end
+  getmarks:close()
   return marks
 end
 
