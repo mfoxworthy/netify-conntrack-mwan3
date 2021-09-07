@@ -164,8 +164,8 @@ function pipeconntrack (nf_mark)
               flow_mark = string.gsub(conn_arr [15], "mark%=", "")
             end
             
-              
-            lfixconntrack(flow_mark, dst_IP, nf_mark)
+            fixconntrack(flow_mark, dst_IP, nf_mark)
+            
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
             then
               if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
