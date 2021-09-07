@@ -60,6 +60,7 @@ function fetchpolicy ()
   local getpols = assert(io.popen(polcmd, 'r'))
   pols = {}
   local allpols = getpols:read('*all')
+  print(allpols)
   getpols:close()
   for policy in allpols do
     table.insert(pols, policy)
