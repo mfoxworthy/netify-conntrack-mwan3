@@ -193,9 +193,10 @@ function pipeconntrack (nf_mark)
               end
         end
     end
-    pipein:flush()    
+        
   end
-  pipein:close()
+  pipein:flush()
+  
   
 end
 
