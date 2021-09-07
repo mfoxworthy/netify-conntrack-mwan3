@@ -59,9 +59,12 @@ function fetchpolicy ()
   local polcmd = 'iptables -L mwan3_rules -t mangle | grep -v LOG | grep match-set | awk \'{print $1}\''
   local getpols = assert(io.popen(polcmd, 'r'))
   pols = {}
-  for policy in getpols:lines() do
+  local allpols = getpols:read('*all')
+  getpols:close()
+  for policy in allpols do
     table.insert(pols, policy)
   end
+  
   
   return pols
 end
@@ -215,8 +218,8 @@ function detach_conntrack()
 end
 
 
-detach_conntrack()
---pipeconntrack(nf_marks)
+-- detach_conntrack()
+pipeconntrack(nf_marks)
 -- Close it all down
 
 
