@@ -213,6 +213,8 @@ function detach_conntrack()
     end
 end
 
+
+detach_conntrack()
 -- Close it all down
 
 
