@@ -71,7 +71,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, 'Made ipset correction for IP=' .. dst_IP .. 'TO-SET=' .. set)
+  logger(1, 'Made ipset correction for IP=' .. dst_IP .. ' TO-SET=' .. set)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
