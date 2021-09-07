@@ -100,7 +100,6 @@ end
 -- If we have bugs, this is where we will find them :)
 
 function fixconntrack (flow_mark, dst_IP, nf_mark)
-  local conn_reset = 0
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
@@ -136,7 +135,6 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
       local del_set = nf_mark[flow_mark]
       flow_reset(dst_IP, set, del_set)
   end
-  return conn_reset
 end
 
 function pipeconntrack (nf_mark)
