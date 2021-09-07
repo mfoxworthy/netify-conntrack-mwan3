@@ -120,7 +120,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         for m in conncheck:lines() do
           if ( m == dst_IP )
             then
-              os.execute('logger -p notice -t conntrack_fix \'Found in set \'' .. v .. " " .. k)
+              logger(1, 'logger -p notice -t conntrack_fix \'Found in set \'' .. v .. ' ' .. k)
               conncheck:close()
               in_table = k    
           end
