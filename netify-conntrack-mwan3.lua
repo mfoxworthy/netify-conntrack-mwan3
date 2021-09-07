@@ -149,7 +149,7 @@ function pipeconntrack (nf_mark)
   local pipein  = assert(io.popen(conncmd,  'r'))
   for line in pipein:lines() do
     conn_arr = split(line)
-    pipein:flush()
+    pipein:close()
     if (conn_arr [1] ~= nil)
       then
         status = string.gsub(conn_arr [1], "%A", "")
