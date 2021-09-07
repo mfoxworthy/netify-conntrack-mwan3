@@ -50,7 +50,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, '\'Made ipset correction for \'' .. dst_IP)
+  logger(1, 'Made ipset correction for IP=' .. dst_IP .. 'TO-SET=' .. set)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -119,7 +119,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         for m in conncheck:lines() do
           if ( m == dst_IP )
             then
-              logger(1, '\'Found in set \'' .. v .. ' ' .. k)
+              logger(1, 'Found in ipset IPSET=' .. v .. ' NF_MARK=' .. k)
               in_table = k -- reassinment for readablility    
           end
         end
@@ -163,7 +163,7 @@ function pipeconntrack (nf_mark)
                 logger(1, '\"No tag found\"')
             else
               flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-              logger(1, '\"New flow detected\" ' .. dst_IP .. ' ' .. flow_mark)
+              logger(1, '\'New flow detected\' IP=' .. dst_IP .. ' NF_MARK=' .. flow_mark)
             end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
