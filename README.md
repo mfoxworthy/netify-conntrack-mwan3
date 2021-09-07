@@ -77,6 +77,10 @@ This doesn't need to be high speed. In fact we may actually want to sit a few se
 
 # Required Packages - OpenWRT
   
-opkg install conntrack ipset lua luaposix
+opkg install conntrack ipset lua mwan3 netify
+
+The netify plugin is also required but not found on public repos. 
+
+To execute, go to the download directory and type: lua netify-conntrack-mwan3.lua
 
 
