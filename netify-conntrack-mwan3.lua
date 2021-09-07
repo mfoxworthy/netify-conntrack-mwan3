@@ -95,7 +95,7 @@ function fixconntrack (f_mark, dst_IP, g_mark)
   if (f_mark ~= nil)
     then
       -- sleep(1)
-      for k, v in pairs(g_marks) do
+      for k, v in pairs(g_mark) do
         if (f_mark ~= k)
           then
             mark_check = mark_check + 1
