@@ -135,8 +135,6 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
       local set = nf_mark[in_table]
       local del_set = nf_mark[flow_mark]
       flow_reset(dst_IP, set, del_set)
-      
-      
   end
   return conn_reset
 end
@@ -149,45 +147,38 @@ function pipeconntrack (nf_mark)
   
   local conncmd = 'conntrack -E'
   local pipein  = assert(io.popen(conncmd,  'r'))
-
   for line in pipein:lines() do
     conn_arr = split(line)
-    
+    pipein:flush()
     if (conn_arr [1] ~= nil)
       then
         status = string.gsub(conn_arr [1], "%A", "")
     
-    -- We need to know if the NEW connection is TCP or UDP.
-    -- conntrack formats these lines differently
+        -- We need to know if the NEW connection is TCP or UDP.
+        -- conntrack formats these lines differently
     
         if (status == "NEW" and conn_arr [2] == "tcp")
-           then
+          then
             dst_IP = string.gsub(conn_arr [7], "dst%=", "")
             
             if (string.gsub(conn_arr [15], "mark%=", "") == nil) -- need to figure out the empty ones but for now we'll ride through it.
               then
-                os.execute('logger -p err -t conntrack_fix \"No tag found\"')
+                logger(1, 'logger -p err -t conntrack_fix \"No tag found\"')
             else
               flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-              os.execute('logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP .. ' ' .. flow_mark)
+              logger(1, 'logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP .. ' ' .. flow_mark)
             end
-            
             fixconntrack(flow_mark, dst_IP, nf_mark)
-            
         elseif (status == "NEW" and conn_arr [2] == "udp") -- pick off UDP
-            then
-              if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
-                then
-                  dport = string.gsub(conn_arr [8], "dport%=", "")
-                  dst_IP = string.gsub(conn_arr [6], "dst%=", "")                  
-              end
+          then
+            if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67"))
+              then
+                dport = string.gsub(conn_arr [8], "dport%=", "")
+                dst_IP = string.gsub(conn_arr [6], "dst%=", "")                  
+            end
         end
     end
-        
   end
-  
-  
-  
 end
 
 -- Set tables up at start so we don't keep looking at static data.
