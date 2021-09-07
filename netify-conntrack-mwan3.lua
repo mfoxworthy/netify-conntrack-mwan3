@@ -192,6 +192,7 @@ function pipeconntrack (nf_mark)
     end
     pipein:flush()    
   end
+  pipein:close()
   
 end
 
@@ -214,4 +215,4 @@ end
 
 -- Close it all down
 
-pipein:close()
+
