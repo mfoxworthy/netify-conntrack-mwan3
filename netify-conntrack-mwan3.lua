@@ -31,7 +31,8 @@ function logger (level, message)
       prior = 'notice'
   end
   os.execute('logger -p ' .. prior .. ' -t conntrack_fix ' .. message)
-    
+end
+
 function split (line)
   words = {}
   for w in line:gmatch("%S+") do 
