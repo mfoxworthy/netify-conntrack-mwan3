@@ -168,13 +168,14 @@ function pipeconntrack (nf_mark)
     
         if (status == "NEW" and conn_arr [2] == "tcp")
            then
-            local dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-            os.execute('logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP)
+            dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+            
             if (string.gsub(conn_arr [15], "mark%=", "") == nil) -- need to figure out the empty ones but for now we'll ride through it.
               then
                 os.execute('logger -p err -t conntrack_fix \"No tag found\"')
             else
               flow_mark = string.gsub(conn_arr [15], "mark%=", "")
+              os.execute('logger -p notice -t conntrack_fix \"New flow detected\" ' .. dst_IP .. ' ' .. flow_mark)
             end
             
             fixconntrack(flow_mark, dst_IP, nf_mark)
