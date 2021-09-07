@@ -19,7 +19,16 @@ end
 
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
-
+function logger (level, message)
+  if (level == 7)
+     prior = 'debug'
+  elseif (level == 5)
+    prior = 'err'
+  elseif (level == 1)
+    prior = 'notice'
+  end
+  os.execute('logger -p ' .. prior .. ' -t conntrack_fix ' .. message ..)
+    
 function split (line)
   words = {}
   for w in line:gmatch("%S+") do 
@@ -36,7 +45,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  os.execute('logger -p notice -t conntrack_fix \'Made ipset correction for \'' .. dst_IP)
+  logger(1, '\'Made ipset correction for \'' .. dst_IP)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -104,7 +113,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         if (logging == 1)
           then
-            os.execute('logger -p notice -t conntrack_fix \'Checking set \'' .. v)
+            logger(1, '\'Checking set \'' .. v)
         end
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
           for m in conncheck:lines() do
