@@ -77,7 +77,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, '\'RESET connction for IP=\'' .. dst_IP .. '\' TO-SET=\'' .. set)
+  logger(1, string.format('\'RESET connction for IP=[%s] TO-SET=[%s]\'', dst_IP, set)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -140,10 +140,10 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(3, '\'Checking set \'' .. v)
+        logger(3, string.format('\'Checking set [%s]\'', v)
         for m in conncheck:lines() do
           if ( m == dst_IP ) then
-            logger(1, '\'Found IP=\'' .. dst_IP .. '\' ipset IPSET=\'' .. v .. '\' NF_MARK=\'' .. k)
+            logger(1, string.format('\'Found IP=[%s] ipset IPSET=[%s] NF_MARK=[%s]\'', dst_IP, v, k)
             in_table = k -- reassinment for readablility    
           end
         end
@@ -181,7 +181,7 @@ function nf_conntrack (nf_mark)
               logger(1, '\'No tag found\'')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            logger(1, '\'New flow detected IP=\'' .. dst_IP .. '\' NF_MARK=\'\ .. flow_mark)
+            logger(1, string.format('\'New flow detected IP=[%s] NF_MARK=[%s]\'', dst_IP, flow_mark)
           end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
