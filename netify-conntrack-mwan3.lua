@@ -148,7 +148,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
     end
   if (in_table == nil) then -- mark wasn't found in any ipsets
     logger(3, 'Not found in ipsets...')
-  elseif (mark_check == set_count) then
+  elseif (mark_check == set_count) then -- do nithing
   elseif (in_table ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
     local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
@@ -156,15 +156,15 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
   end
 end
 
-function pipeconntrack (nf_mark)
+function nf_conntrack (nf_mark)
 
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
   
   local conncmd = 'conntrack -E -b 10485760'
-  local pipein  = assert(io.popen(conncmd,  'r'))
-  for line in pipein:lines() do
+  local connin = assert(io.popen(conncmd,  'r'))
+  for line in connin:lines() do
     conn_arr = split(line)
     if (conn_arr [1] ~= nil) then
       status = string.gsub(conn_arr [1], "%A", "")
@@ -204,7 +204,7 @@ nf_marks = fetchmarks(policy, ipsets)
 function detach_conntrack()
     local pid = posix.fork()
     if pid == 0 then -- this is the child process
-      pipeconntrack(nf_marks)
+      nf_conntrack(nf_marks)
     else             -- this is the parent process
         -- nothing
     end
