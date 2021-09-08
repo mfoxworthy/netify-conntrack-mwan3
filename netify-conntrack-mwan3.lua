@@ -140,7 +140,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         logger(3, 'Checking set ' .. v)
         for m in conncheck:lines() do
           if ( m == dst_IP ) then
-            logger(1, 'Found in ipset IPSET=' .. v .. ' NF_MARK=' .. k)
+            logger(1, 'Found ' .. dst_IP .. ' ipset IPSET=' .. v .. ' NF_MARK=' .. k)
             in_table = k -- reassinment for readablility    
           end
         end
