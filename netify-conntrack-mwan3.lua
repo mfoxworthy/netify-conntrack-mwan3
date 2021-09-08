@@ -194,6 +194,7 @@ function pipeconntrack (nf_mark)
 end
 
 -- Set tables up at start so we don't keep looking at static data.
+-- Future version will build a table and stagre this data to improve performance.
 policy = fetchpolicy()
 ipsets = fetchipsets()
 nf_marks = fetchmarks(policy, ipsets)
