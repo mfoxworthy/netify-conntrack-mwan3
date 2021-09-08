@@ -162,9 +162,9 @@ function nf_conntrack (nf_mark)
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
   
-  local conncmd = 'conntrack -E -b 10485760'
-  local connin = assert(io.popen(conncmd,  'r'))
-  for line in connin:lines() do
+  local conn_cmd = 'conntrack -E -b 10485760'
+  local conn_in = assert(io.popen(conn_cmd,  'r'))
+  for line in conn_in:lines() do
     conn_arr = split(line)
     if (conn_arr [1] ~= nil) then
       status = string.gsub(conn_arr [1], "%A", "")
