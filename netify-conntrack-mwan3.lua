@@ -220,7 +220,7 @@ function detach_conntrack()
 end
 
 
-detach_conntrack()
---pipeconntrack(nf_marks)
+--detach_conntrack()
+nf_conntrack(nf_marks)
 
 
