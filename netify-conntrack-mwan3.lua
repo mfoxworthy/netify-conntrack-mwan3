@@ -49,12 +49,14 @@ function nolog()
 
 
 function logger(level, message)
-  loglvl = loglvl_arr[level]
-  loglvl = function()
-  if (loglvl ~= nil and logging_level ~= 0) then
-    loglvl(message)
-  else
-    nolog()
+  if (logging_level ~= 1) then
+    if (level == 1) then
+      loglvl1(message)
+    elseif (level == 2) then
+      loglvl2(message)
+    elseif (level == 3) then
+      loglvl3(message)
+    end
   end
 end
 
