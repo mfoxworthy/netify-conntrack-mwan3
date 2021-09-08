@@ -164,7 +164,7 @@ function nf_conntrack (nf_mark)
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
-  logger(1, \'NF_CONNTRACK Started...\')
+  logger(1, '\'NF_CONNTRACK Started...\'')
   local conn_cmd = 'conntrack -E -b 10485760'
   local conn_in = assert(io.popen(conn_cmd,  'r'))
   for line in conn_in:lines() do
