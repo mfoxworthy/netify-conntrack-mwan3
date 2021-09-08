@@ -32,13 +32,15 @@ function loglvl1(message)
 end
  
 function loglvl2(message)
-  if (logging_level == 2) then
+  if (logging_level <= 2) then
+  loglvl1(message)
   os.execute('logger -p err -t conntrack_fix ' .. message)
   end
 end
 
 function loglvl3(message)
   if (logging_level == 3) then
+    loglvl2(message)
     os.execute('logger -p debug -t conntrack_fix ' .. message)
   end
 end
