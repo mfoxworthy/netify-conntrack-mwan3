@@ -49,6 +49,7 @@ function nolog()
 
 
 function logger (level, message)
+  print(level)
   local loglvl = tonumber(loglvl_arr[level])
   print(loglvl)
   if (loglvl ~= nil and logging_level ~= 0) then
