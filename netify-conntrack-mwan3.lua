@@ -168,7 +168,7 @@ function nf_conntrack (nf_mark)
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
   logger(1, '\'NF_CONNTRACK Started...\'')
-  local conn_cmd = 'conntrack -E -b 10485760 \>/dev/null 2\>\&1'
+  local conn_cmd = 'conntrack -E -b 10485760'
   local conn_in = assert(io.popen(conn_cmd,  'r'))
   for line in conn_in:lines() do
     conn_arr = split(line)
