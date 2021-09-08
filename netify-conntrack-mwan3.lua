@@ -182,7 +182,7 @@ function pipeconntrack (nf_mark)
           end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
-          if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) then
+          if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) then -- ommit local UDP. Need a better fuction for this.
             dport = string.gsub(conn_arr [8], "dport%=", "")
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
           end
@@ -195,6 +195,7 @@ end
 
 -- Set tables up at start so we don't keep looking at static data.
 -- Future version will build a table and stagre this data to improve performance.
+
 policy = fetchpolicy()
 ipsets = fetchipsets()
 nf_marks = fetchmarks(policy, ipsets)
