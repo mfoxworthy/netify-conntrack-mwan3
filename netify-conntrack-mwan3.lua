@@ -186,7 +186,6 @@ function nf_conntrack (nf_mark)
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
             local l_cmd = string.format('\'New flow detected IP=%s NF_MARK=%s\'', dst_IP, flow_mark)
             logger(1, l_cmd )
-            print(l_cmd)
           end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
@@ -219,7 +218,7 @@ function detach_conntrack()
 end
 
 
---detach_conntrack()
-nf_conntrack(nf_marks)
+detach_conntrack()
+--nf_conntrack(nf_marks)
 
 
