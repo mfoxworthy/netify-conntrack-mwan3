@@ -11,7 +11,7 @@
 
 local posix = require "posix"
 local logging_level = 1
-loglvl_arr = {loglvl1, loglvl2, loglvl3}
+local loglvl_arr = {'loglvl1', 'loglvl2', 'loglvl3'}
 
 -- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 
@@ -26,23 +26,19 @@ end
 --Logging logic. Probably find a logging lib somewhere and replace.
 
 function loglvl1(message)
- if (logging_level == 1) then
-  local cmd = string.format('logger -p err -t conntrack_fix [%s]', message)
-  print(cmd)
-  os.execute(cmd)
+  if (logging_level == 1) then
+    os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
  end
 end
  
 function loglvl2(message)
   if (logging_level <= 2) then
-  loglvl1(message)
-  os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
+    os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
   end
 end
 
 function loglvl3(message)
   if (logging_level == 3) then
-    loglvl2(message)
     os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
   end
 end
@@ -53,11 +49,7 @@ function nolog()
 
 
 function logger (level, message)
-  print(loglvl_arr[1])
-  print(loglvl_arr[2])
-  print(loglvl_arr[3])
   loglvl = loglvl_arr[level]
-  print(loglvl)
   if (loglvl ~= nil and logging_level ~= 0) then
     loglvl(message)
   else
