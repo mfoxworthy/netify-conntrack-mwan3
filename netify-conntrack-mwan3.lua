@@ -22,7 +22,8 @@ end
 
 
 
--- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
+--Logging logic. Probably fing a logging lib somewhere and replace.
+
 function loglvl1(message)
  if (logging_level == 1) then
   os.execute('logger -p notice -t conntrack_fix ' .. message)
@@ -54,6 +55,8 @@ function logger (level, message)
     nolog()
   end
 end
+
+-- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
 function split (line)
   words = {}
