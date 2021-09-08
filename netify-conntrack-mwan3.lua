@@ -11,6 +11,7 @@
 
 local posix = require "posix"
 local logging_level = 1
+local loglvl_arr = {loglvl1, loglvl2, loglvl3}
 
 -- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 
@@ -32,7 +33,7 @@ end
  
 function loglvl2(message)
   if (logging_level == 2) then
-    os.execute('logger -p err -t conntrack_fix ' .. message)
+  os.execute('logger -p err -t conntrack_fix ' .. message)
   end
 end
 
@@ -45,7 +46,7 @@ end
 function nolog()
   end
  
-loglvl_arr = {loglvl1, loglvl2, loglvl3}
+
 
 function logger (level, message)
   loglvl = loglvl_arr[level]
@@ -74,7 +75,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, 'Made ipset correction for IP=' .. dst_IP .. ' TO-SET=' .. set)
+  logger(1, 'RESET connction for IP=' .. dst_IP .. ' TO-SET=' .. set)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
