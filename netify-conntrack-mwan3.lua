@@ -137,7 +137,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(3, '\'Checking set \'' .. v)
+        logger(3, 'Checking set ' .. v)
         for m in conncheck:lines() do
           if ( m == dst_IP ) then
             logger(1, 'Found in ipset IPSET=' .. v .. ' NF_MARK=' .. k)
