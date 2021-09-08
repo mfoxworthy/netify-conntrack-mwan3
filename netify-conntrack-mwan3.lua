@@ -11,7 +11,7 @@
 
 local posix = require "posix"
 local logging_level = 1
-local loglvl_arr = {loglvl1, loglvl2, loglvl3}
+loglvl_arr = {loglvl1, loglvl2, loglvl3}
 
 -- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 
@@ -53,6 +53,9 @@ function nolog()
 
 
 function logger (level, message)
+  print(loglvl_arr[1])
+  print(loglvl_arr[2])
+  print(loglvl_arr[3])
   loglvl = loglvl_arr[level]
   print(loglvl)
   if (loglvl ~= nil and logging_level ~= 0) then
