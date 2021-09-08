@@ -50,6 +50,7 @@ function nolog()
 
 function logger(level, message)
   loglvl = loglvl_arr[level]
+  loglvl = function()
   if (loglvl ~= nil and logging_level ~= 0) then
     loglvl(message)
   else
