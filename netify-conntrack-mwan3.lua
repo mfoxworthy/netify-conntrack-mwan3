@@ -49,13 +49,15 @@ function nolog()
 
 
 function logger(level, message)
-  if (logging_level ~= 1) then
+  if (logging_level ~= 0) then
     if (level == 1) then
       loglvl1(message)
     elseif (level == 2) then
       loglvl2(message)
     elseif (level == 3) then
       loglvl3(message)
+    else
+      nolog()
     end
   end
 end
