@@ -27,7 +27,9 @@ end
 
 function loglvl1(message)
  if (logging_level == 1) then
-  os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
+  local cmd = string.format('logger -p err -t conntrack_fix [%s]', message)
+  print(cmd)
+  os.execute(cmd)
  end
 end
  
