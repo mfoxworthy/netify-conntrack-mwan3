@@ -48,7 +48,7 @@ function nolog()
  
 
 
-function logger (level, message)
+function logger(level, message)
   loglvl = loglvl_arr[level]
   if (loglvl ~= nil and logging_level ~= 0) then
     loglvl(message)
