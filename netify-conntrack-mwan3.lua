@@ -22,7 +22,7 @@ end
 
 
 
---Logging logic. Probably fing a logging lib somewhere and replace.
+--Logging logic. Probably find a logging lib somewhere and replace.
 
 function loglvl1(message)
  if (logging_level == 1) then
