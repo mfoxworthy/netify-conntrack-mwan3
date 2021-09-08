@@ -167,6 +167,7 @@ function nf_conntrack (nf_mark)
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
   logger(1, '\'NF_CONNTRACK Started...\'')
+  print('NF_CONNTRACK Started...')
   local conn_cmd = 'conntrack -E -b 10485760'
   local conn_in = assert(io.popen(conn_cmd,  'r'))
   for line in conn_in:lines() do
@@ -183,7 +184,9 @@ function nf_conntrack (nf_mark)
               logger(1, '\'No tag found\'')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            logger(1, string.format('\'New flow detected IP=[%s] NF_MARK=[%s]\'', dst_IP, flow_mark))
+            local l_cmd = string.format('\'New flow detected IP=[%s] NF_MARK=[%s]\'', dst_IP, flow_mark)
+            logger(1, l_cmd )
+            print(l_cmd)
           end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
