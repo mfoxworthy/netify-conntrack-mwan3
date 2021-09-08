@@ -172,10 +172,10 @@ function pipeconntrack (nf_mark)
         if (status == "NEW" and conn_arr [2] == "tcp") then
           dst_IP = string.gsub(conn_arr [7], "dst%=", "")
           if (string.gsub(conn_arr [15], "mark%=", "") == nil) then -- need to figure out the empty ones but for now we'll ride through it.
-              logger(1, '\"No tag found\"')
+              logger(1, 'No tag found')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            logger(1, '\'New flow detected\' IP=' .. dst_IP .. ' NF_MARK=' .. flow_mark)
+            logger(1, 'New flow detected IP=' .. dst_IP .. ' NF_MARK=' .. flow_mark)
           end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
