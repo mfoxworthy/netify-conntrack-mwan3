@@ -26,13 +26,13 @@ end
 --Logging logic. Probably find a logging lib somewhere and replace.
 
 function loglvl1(message)
- if (logging_level == 1) then
+ if (logging_level >= 1) then
   os.execute('logger -p notice -t conntrack_fix ' .. message)
  end
 end
  
 function loglvl2(message)
-  if (logging_level == 2) then
+  if (logging_level >= 2) then
   os.execute('logger -p err -t conntrack_fix ' .. message)
   end
 end
