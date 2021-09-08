@@ -77,7 +77,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, 'RESET connction for IP=' .. dst_IP .. ' TO-SET=' .. set)
+  logger(1, '\'RESET connction for IP=\'' .. dst_IP .. '\' TO-SET=\'' .. set)
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -140,10 +140,10 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(3, 'Checking set ' .. v)
+        logger(3, '\'Checking set \'' .. v)
         for m in conncheck:lines() do
           if ( m == dst_IP ) then
-            logger(1, 'Found IP=' .. dst_IP .. ' ipset IPSET=' .. v .. ' NF_MARK=' .. k)
+            logger(1, '\'Found IP=\'' .. dst_IP .. '\' ipset IPSET=\'' .. v .. '\' NF_MARK=\'' .. k)
             in_table = k -- reassinment for readablility    
           end
         end
@@ -164,7 +164,7 @@ function nf_conntrack (nf_mark)
   -- Variables to to pipe conntrack data into our script. 
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
-  os.execute('logger -p notice -t conntrack_fix \'Process NF_CONNTRACK Started\'')
+  logger(1, \'NF_CONNTRACK Started...\')
   local conn_cmd = 'conntrack -E -b 10485760'
   local conn_in = assert(io.popen(conn_cmd,  'r'))
   for line in conn_in:lines() do
@@ -178,10 +178,10 @@ function nf_conntrack (nf_mark)
         if (status == "NEW" and conn_arr [2] == "tcp") then
           dst_IP = string.gsub(conn_arr [7], "dst%=", "")
           if (string.gsub(conn_arr [15], "mark%=", "") == nil) then -- need to figure out the empty ones but for now we'll ride through it.
-              logger(1, 'No tag found')
+              logger(1, '\'No tag found\'')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            logger(1, 'New flow detected IP=' .. dst_IP .. ' NF_MARK=' .. flow_mark)
+            logger(1, '\'New flow detected IP=\'' .. dst_IP .. '\' NF_MARK=\'\ .. flow_mark)
           end
             fixconntrack(flow_mark, dst_IP, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
@@ -190,7 +190,7 @@ function nf_conntrack (nf_mark)
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
           end
         else
-          logger(3, 'Connection is not TCP or UDP')
+          logger(3, '\'Connection is not TCP or UDP\'')
         end
     end
   end
