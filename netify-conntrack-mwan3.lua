@@ -27,21 +27,21 @@ end
 
 function loglvl1(message)
  if (logging_level == 1) then
-  os.execute('logger -p notice -t conntrack_fix ' .. message)
+  os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
  end
 end
  
 function loglvl2(message)
   if (logging_level <= 2) then
   loglvl1(message)
-  os.execute('logger -p err -t conntrack_fix ' .. message)
+  os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
   end
 end
 
 function loglvl3(message)
   if (logging_level == 3) then
     loglvl2(message)
-    os.execute('logger -p debug -t conntrack_fix ' .. message)
+    os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
   end
 end
 
