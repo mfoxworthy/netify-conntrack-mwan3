@@ -203,7 +203,6 @@ nf_marks = fetchmarks(policy, ipsets)
 -- Kick things off.
 function detach_conntrack()
     local pid = posix.fork()
-
     if pid == 0 then -- this is the child process
       pipeconntrack(nf_marks)
     else             -- this is the parent process
