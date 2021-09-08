@@ -27,19 +27,19 @@ end
 
 function loglvl1(message)
   if (logging_level == 1) then
-    os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
+    os.execute(string.format('logger -p err -t conntrack_fix %s', message))
  end
 end
  
 function loglvl2(message)
   if (logging_level <= 2) then
-    os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
+    os.execute(string.format('logger -p err -t conntrack_fix %s', message))
   end
 end
 
 function loglvl3(message)
   if (logging_level == 3) then
-    os.execute(string.format('logger -p err -t conntrack_fix [%s]', message))
+    os.execute(string.format('logger -p err -t conntrack_fix %s', message))
   end
 end
 
@@ -80,7 +80,7 @@ function flow_reset (dst_IP, set, del_set)
   os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, string.format('\'RESET connction for IP=[%s] TO-SET=[%s]\'', dst_IP, set))
+  logger(1, string.format('\'RESET connction for IP=%s TO-SET=%s\'', dst_IP, set))
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -146,7 +146,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         logger(3, string.format('\'Checking set [%s]\'', v))
         for m in conncheck:lines() do
           if ( m == dst_IP ) then
-            logger(1, string.format('\'Found IP=[%s] ipset IPSET=[%s] NF_MARK=[%s]\'', dst_IP, v, k))
+            logger(1, string.format('\'Found IP=%s ipset IPSET=%s NF_MARK=%s\'', dst_IP, v, k))
             in_table = k -- reassinment for readablility    
           end
         end
@@ -168,7 +168,6 @@ function nf_conntrack (nf_mark)
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
   logger(1, '\'NF_CONNTRACK Started...\'')
-  print('NF_CONNTRACK Started...')
   local conn_cmd = 'conntrack -E -b 10485760'
   local conn_in = assert(io.popen(conn_cmd,  'r'))
   for line in conn_in:lines() do
@@ -185,7 +184,7 @@ function nf_conntrack (nf_mark)
               logger(1, '\'No tag found\'')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            local l_cmd = string.format('\'New flow detected IP=[%s] NF_MARK=[%s]\'', dst_IP, flow_mark)
+            local l_cmd = string.format('\'New flow detected IP=%s NF_MARK=%s\'', dst_IP, flow_mark)
             logger(1, l_cmd )
             print(l_cmd)
           end
