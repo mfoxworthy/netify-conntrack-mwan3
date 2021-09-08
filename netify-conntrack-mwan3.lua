@@ -159,7 +159,7 @@ function pipeconntrack (nf_mark)
   -- We don't format it on the line, we use multiple variables
   -- so its best to just use Lua.
   
-  local conncmd = 'conntrack -E'
+  local conncmd = 'conntrack -E -b 10485760'
   local pipein  = assert(io.popen(conncmd,  'r'))
   for line in pipein:lines() do
     conn_arr = split(line)
