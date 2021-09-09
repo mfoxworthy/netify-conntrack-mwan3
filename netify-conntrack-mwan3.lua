@@ -144,7 +144,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(1, string.format('\'Checking set %s\'', v))
-        local conn_str = conncheck:read("*all")
+        local conn_str = conncheck:lines()
         print('Here is the string: conn_str ' .. conn_str)
         
           if string.find(conn_str, "Warning\:") then
