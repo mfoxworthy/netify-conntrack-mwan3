@@ -74,13 +74,13 @@ end
 
 -- Function to reset flow
 
-function flow_reset (dst_IP, set, del_set)
+function flow_reset (dst_IP, dport, set, del_set)
   local reset = 'conntrack -D -d ' .. dst_IP .. ' \>/dev/null 2\>\&1'
-  os.execute('ipset del -exist ' .. del_set .. ' ' .. dst_IP)
-  os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
+  --os.execute('ipset del -exist ' .. del_set .. ' ' .. dst_IP)
+  --os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
   sleep(1)
   os.execute(reset)
-  logger(1, string.format('\'RESET connction for IP=%s TO-SET=%s\'', dst_IP, set))
+  logger(1, string.format('\'RESET connction for IP=%s DPORT=%s TO-SET=%s\'', dst_IP, dport, set))
 end
 
 -- Function to get iptables policy chain used by mwan3 for hooks
@@ -129,7 +129,7 @@ end
 -- Heavy lifter funtion to test all flows then call the reset helper that resets flows and add the ip to the correct set.
 -- If we have bugs, this is where we will find them :)
 
-function fixconntrack (flow_mark, dst_IP, nf_mark)
+function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
@@ -141,12 +141,12 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
         
         set_count = set_count + 1
         
-        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
+        local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(3, string.format('\'Checking set [%s]\'', v))
+        logger(3, string.format('\'Checking set %s\'', v))
         for m in conncheck:lines() do
-          if ( m == dst_IP ) then
-            logger(1, string.format('\'Found IP=%s IPSET=%s NF_MARK=%s\'', dst_IP, v, k))
+          if string.find(str, "Warning\:") then
+            logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
         end
@@ -158,7 +158,7 @@ function fixconntrack (flow_mark, dst_IP, nf_mark)
   elseif (in_table ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
     local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
-    flow_reset(dst_IP, set, del_set)
+    flow_reset(dst_IP, dport, set, del_set)
   end
 end
 
@@ -180,14 +180,15 @@ function nf_conntrack (nf_mark)
     
         if (status == "NEW" and conn_arr [2] == "tcp") then
           dst_IP = string.gsub(conn_arr [7], "dst%=", "")
+          dport = string.gsub(conn_arr [9], "dport%=", "")
           if (string.gsub(conn_arr [15], "mark%=", "") == nil) then -- need to figure out the empty ones but for now we'll ride through it.
               logger(1, '\'No tag found\'')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            local l_cmd = string.format('\'New flow detected IP=%s NF_MARK=%s\'', dst_IP, flow_mark)
+            local l_cmd = string.format('\'New flow detected IP=%s DPORT=%s NF_MARK=%s\'', dst_IP, dport, flow_mark)
             logger(1, l_cmd )
           end
-            fixconntrack(flow_mark, dst_IP, nf_mark)
+            fixconntrack(flow_mark, dst_IP, dport, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
           if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) then -- ommit local UDP. Need a better fuction for this.
             dport = string.gsub(conn_arr [8], "dport%=", "")
