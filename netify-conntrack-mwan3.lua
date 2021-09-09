@@ -209,6 +209,7 @@ end
 policy = fetchpolicy()
 ipsets = fetchipsets()
 nf_marks = fetchmarks(policy, ipsets)
+for i,v in ipairs(nf_marks) do print(i,v) end
 
 -- Kick things off.
 function detach_conntrack()
