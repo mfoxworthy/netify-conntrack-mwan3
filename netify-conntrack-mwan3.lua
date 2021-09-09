@@ -142,7 +142,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         set_count = set_count + 1
         print(v)
         local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
-        local conncheck = assert(io.popen(conncheckcmd, 'r'))
+        local conncheck = (io.popen(conncheckcmd))
         logger(1, string.format('\'Checking set %s\'', v))
         local conn_str = tostring(conncheck:read("*all"))
           if string.find(m, "Warning\:") then
