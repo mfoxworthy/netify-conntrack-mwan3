@@ -140,13 +140,13 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
       end
         
         set_count = set_count + 1
-        print(v)
         local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
         local conncheck = (io.popen(conncheckcmd))
+        
         logger(1, string.format('\'Checking set %s\'', v))
-        local conn_str = tostring(conncheck:read('*all'))
+        local conn_str = conncheck:read('*all'))
         print('Testing...' .. conn_str)
-          if string.find(m, "Warning\:") then
+          if string.find(conn_str, "Warning\:") then
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
