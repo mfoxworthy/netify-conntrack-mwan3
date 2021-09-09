@@ -218,9 +218,9 @@ function nf_conntrack (nf_mark)
         -- conntrack formats these lines differently
     
         if (status == "NEW" and conn_arr [2] == "tcp") then
-          dst_IP = string.gsub(conn_arr [7], "dst%=", "")
-          dport = string.gsub(conn_arr [9], "dport%=", "")
-          if (string.gsub(conn_arr [15], "mark%=", "") == nil) then -- need to figure out the empty ones but for now we'll ride through it.
+          dst_IP = assert(string.gsub(conn_arr [7], "dst%=", ""))
+          dport = assert(string.gsub(conn_arr [9], "dport%=", ""))
+          if (assert(string.gsub(conn_arr [15], "mark%=", "")) == nil) then -- need to figure out the empty ones but for now we'll ride through it.
               logger(1, '\'No tag found\'')
           else
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
