@@ -138,14 +138,13 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
       if (flow_mark ~= k) then
         mark_check = mark_check + 1
       end
-        
         set_count = set_count + 1
         local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        
         logger(1, string.format('\'Checking set %s\'', v))
         for m in conncheck:lines() do
           if (m == dst_IP) then
+            print(m)
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
