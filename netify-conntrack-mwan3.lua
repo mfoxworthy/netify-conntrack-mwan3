@@ -140,17 +140,16 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
       end
         
         set_count = set_count + 1
-        local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
+        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = (io.popen(conncheckcmd))
         
         logger(1, string.format('\'Checking set %s\'', v))
-        local conn_str = conncheck:read('*all'))
-        print('Testing...' .. conn_str)
-          if string.find(conn_str, "Warning\:") then
+        for m in conncheck:lines() do
+          if (m == dst_IP)
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
-        
+        end
       end
     end
   if (in_table == nil) then -- mark wasn't found in any ipsets
