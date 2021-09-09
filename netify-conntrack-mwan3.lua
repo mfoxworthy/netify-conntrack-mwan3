@@ -146,7 +146,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         logger(1, string.format('\'Checking set %s\'', v))
         local conn_str = conncheck:read("*all")
         
-          if string.find(m, "Warning\:") then
+          if string.find(conn_str, "Warning\:") then
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
