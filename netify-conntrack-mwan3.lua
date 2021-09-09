@@ -180,6 +180,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
             table.insert(ip_table, 2, v)
           end
           print(ip_table[1] .. ' ' .. ip_table[2])
+          print(dst_IP .. ' ' .. dport)
           if (ip_table[1] == dst_IP and ip_table[2] == dport) then
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
