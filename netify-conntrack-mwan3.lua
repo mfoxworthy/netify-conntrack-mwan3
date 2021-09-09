@@ -23,6 +23,33 @@ end
 
 
 
+-- String splitter function. Just handy for string manipulation.
+
+function string:split(sSeparator, nMax, bRegexp)
+   assert(sSeparator ~= '')
+   assert(nMax == nil or nMax >= 1)
+
+   local aRecord = {}
+
+   if self:len() > 0 then
+      local bPlain = not bRegexp
+      nMax = nMax or -1
+
+      local nField, nStart = 1, 1
+      local nFirst,nLast = self:find(sSeparator, nStart, bPlain)
+      while nFirst and nMax ~= 0 do
+         aRecord[nField] = self:sub(nStart, nFirst-1)
+         nField = nField+1
+         nStart = nLast+1
+         nFirst,nLast = self:find(sSeparator, nStart, bPlain)
+         nMax = nMax-1
+      end
+      aRecord[nField] = self:sub(nStart)
+   end
+
+   return aRecord
+end
+
 --Logging logic. Probably find a logging lib somewhere and replace.
 
 function loglvl1(message)
@@ -139,12 +166,22 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         mark_check = mark_check + 1
       end
         set_count = set_count + 1
-        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \-F\, \'{print $1}\''
+        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(1, string.format('\'Checking set %s\'', v))
         for m in conncheck:lines() do
-          if (m == dst_IP) then
-            print(m)
+          local ip_table = {}
+          for k,v in next, string.split(m, ',') do 
+            --print(v) 
+            table.insert(ip_table, v)
+          end
+          for k,v in next, string.split(ip_table[2], ':') do 
+           -- print(v) 
+            table.insert(ip_table, 2, v)
+          end
+          print(ip_table[1])
+          print(ip_table[2])
+          if (ip_table[1] == dst_IP and ip_table[2] == dport) then
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
