@@ -140,7 +140,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
       end
         
         set_count = set_count + 1
-        
+        print(v)
         local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(1, string.format('\'Checking set %s\'', v))
