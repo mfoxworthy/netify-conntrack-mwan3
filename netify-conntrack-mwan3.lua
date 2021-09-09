@@ -144,12 +144,13 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(1, string.format('\'Checking set %s\'', v))
-        for m in conncheck:lines() do
+        local conn_str = conncheck:read("*all")
+        
           if string.find(m, "Warning\:") then
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
-        end
+        
       end
     end
   if (in_table == nil) then -- mark wasn't found in any ipsets
@@ -219,7 +220,7 @@ function detach_conntrack()
 end
 
 
-detach_conntrack()
---nf_conntrack(nf_marks)
+--detach_conntrack()
+nf_conntrack(nf_marks)
 
 
