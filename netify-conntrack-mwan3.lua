@@ -133,7 +133,6 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
-  for i,v in ipairs(nf_mark) do print(i,v) end
   if (flow_mark ~= nil) then
     for k, v in pairs(nf_mark) do
       if (flow_mark ~= k) then
@@ -209,7 +208,7 @@ end
 policy = fetchpolicy()
 ipsets = fetchipsets()
 nf_marks = fetchmarks(policy, ipsets)
-for i,v in ipairs(nf_marks) do print(i,v) end
+
 
 -- Kick things off.
 function detach_conntrack()
