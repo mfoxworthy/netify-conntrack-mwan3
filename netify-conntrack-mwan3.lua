@@ -182,7 +182,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
     logger(1, 'Not found in ipsets...')
   elseif (mark_check == set_count) then -- do nothing
   elseif (k ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
-    local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
+    local set = nf_mark[k] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
     flow_reset(dst_IP, dport, set, del_set)
   else
