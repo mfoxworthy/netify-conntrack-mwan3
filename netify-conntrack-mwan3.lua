@@ -174,14 +174,14 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         local conn_str = conncheck:read('*all')
         if string.find(conn_str, "Warning\:") then
           logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
-          in_table = k -- reassinment for readablility    
+          -- in_table = k
         end
       end
     end
-  if (in_table == nil) then -- mark wasn't found in any ipsets
+  if (k == nil) then -- mark wasn't found in any ipsets
     logger(1, 'Not found in ipsets...')
   elseif (mark_check == set_count) then -- do nothing
-  elseif (in_table ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
+  elseif (k ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
     local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
     flow_reset(dst_IP, dport, set, del_set)
