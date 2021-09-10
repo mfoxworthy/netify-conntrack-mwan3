@@ -161,7 +161,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
-  in_table = nil
+  in_table = 0
   if (flow_mark ~= nil) then
     for k, v in pairs(nf_mark) do
       if (flow_mark ~= k) then
@@ -178,7 +178,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         end
       end
     end
-  if (in_table == nil) then -- mark wasn't found in any ipsets
+  if (in_table == 0) then -- mark wasn't found in any ipsets
     logger(1, 'Not found in ipsets...')
   elseif (mark_check == set_count) then -- do nothing
   elseif (in_table ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
