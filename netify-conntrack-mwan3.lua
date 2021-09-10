@@ -62,6 +62,12 @@ end
 
 -- Function to split the conntrack string and put it into a table -- Tables can be arrays in Lua
 
+function tablelength(table)
+  local count = 0
+  for k in pairs(table) do count = count + 1 end
+  return count
+end
+
 function split (line)
   words = {}
   for w in line:gmatch("%S+") do 
@@ -181,7 +187,7 @@ function nf_conntrack (nf_mark)
           dst_IP = (string.gsub(conn_arr [7], "dst%=", ""))
           dport = (string.gsub(conn_arr [9], "dport%=", ""))
           
-          conn_arr_count = #conn_arr
+          conn_arr_count = tablelength(conn_arr)
           logger(1, 'This connection has %s elements', conn_arr_count)
           if (conn_arr_count == 15) then -- need to figure out the empty ones but for now we'll ride through it.
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
