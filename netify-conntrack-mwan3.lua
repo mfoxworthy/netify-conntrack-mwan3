@@ -172,10 +172,9 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, v))
         local conn_str = conncheck:read('*all')
-          if string.find(conn_str, "Warning\:") then
-            logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
-            in_table = k -- reassinment for readablility    
-          end
+        if string.find(conn_str, "Warning\:") then
+          logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
+          in_table = k -- reassinment for readablility    
         end
       end
     end
