@@ -149,6 +149,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
         logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, v))
         local conn_str = conncheck:read('*all')
+        conncheck:close()
         if string.find(conn_str, "Warning\:") then
           logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
           set_mark = k
@@ -170,8 +171,9 @@ end
 function nf_conntrack (nf_mark)
 
   -- Variables to to pipe conntrack data into our script. 
-  -- We don't format it on the line, we use multiple variables
+  -- We don't to format it on the command line, we use multiple variables
   -- so its best to just use Lua.
+  
   logger(1, '\'NF_CONNTRACK Started...\'')
   local conn_cmd = 'conntrack -E -b 10485760'
   local conn_in = assert(io.popen(conn_cmd,  'r'))
@@ -186,17 +188,15 @@ function nf_conntrack (nf_mark)
         if (status == "NEW" and conn_arr [2] == "tcp") then
           dst_IP = (string.gsub(conn_arr [7], "dst%=", ""))
           dport = (string.gsub(conn_arr [9], "dport%=", ""))
-          
-          conn_arr_count = tablelength(conn_arr)
+          local conn_arr_count = tablelength(conn_arr)
           logger(1, (string.format('This connection has %s elements', conn_arr_count)))
           if (conn_arr_count == 15) then -- need to figure out the empty ones but for now we'll ride through it.
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
-            local l_cmd = string.format('\'New flow detected IP=%s DPORT=%s NF_MARK=%s\'', dst_IP, dport, flow_mark)
-            logger(1, l_cmd )
+            logger(1, (string.format('\'New flow detected IP=%s DPORT=%s NF_MARK=%s\'', dst_IP, dport, flow_mark)))
           else
             logger(1, '\'No tag found\'')
           end
-            fixconntrack(flow_mark, dst_IP, dport, nf_mark)
+          fixconntrack(flow_mark, dst_IP, dport, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
           if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) then -- ommit local UDP. Need a better fuction for this.
             dport = string.gsub(conn_arr [8], "dport%=", "")
