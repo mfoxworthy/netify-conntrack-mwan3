@@ -156,6 +156,7 @@ end
 -- Heavy lifter funtion to test all flows then call the reset helper that resets flows and add the ip to the correct set.
 -- If we have bugs, this is where we will find them :)
 
+
 function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
@@ -167,22 +168,11 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         mark_check = mark_check + 1
       end
         set_count = set_count + 1
-        local conncheckcmd = 'ipset list ' .. v .. ' | tail -n +9 | awk \'{print $1}\''
+        local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport .. ' 2>&1 | tee /tmp/set_e ; cat /tmp/set_e'
         local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(1, string.format('\'Checking set %s\'', v))
-        for m in conncheck:lines() do
-          local ip_table = {}
-          for k,v in next, string.split(m, ',') do 
-            --print(v) 
-            table.insert(ip_table, v)
-          end
-          for k,v in next, string.split(ip_table[2], ':') do 
-           -- print(v) 
-            table.insert(ip_table, 2, v)
-          end
-          --print('ipset values.. ' .. ip_table[1] .. ' ' .. ip_table[2])
-          --print('flows values.. ' .. dst_IP .. ' ' .. dport)
-          if (ip_table[1] == dst_IP and ip_table[2] == dport) then
+        logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, v))
+        local conn_str = conncheck:read('*all')
+          if string.find(conn_str, "Warning\:") then
             logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
             in_table = k -- reassinment for readablility    
           end
