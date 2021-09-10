@@ -185,7 +185,7 @@ function nf_conntrack (nf_mark)
         -- We need to know if the NEW connection is TCP or UDP.
         -- conntrack formats these lines differently
     
-        if (status == "NEW" and conn_arr [2] == "tcp" and conn_arr[5] ~= "SYN_SENT") then
+        if (status == "UPDATE" and conn_arr [2] == "tcp" and conn_arr[5] == "ESTABLISHED") then
           dst_IP = (string.gsub(conn_arr [7], "dst%=", ""))
           dport = (string.gsub(conn_arr [9], "dport%=", ""))
           local conn_arr_count = tablelength(conn_arr)
