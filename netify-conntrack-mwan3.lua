@@ -220,12 +220,13 @@ function nf_conntrack (nf_mark)
         if (status == "NEW" and conn_arr [2] == "tcp") then
           dst_IP = assert(string.gsub(conn_arr [7], "dst%=", ""))
           dport = assert(string.gsub(conn_arr [9], "dport%=", ""))
-          if (assert(string.gsub(conn_arr [15], "mark%=", "")) == nil) then -- need to figure out the empty ones but for now we'll ride through it.
-              logger(1, '\'No tag found\'')
-          else
+          
+          if (pcall(string.gsub(conn_arr [15], "mark%=", "")) ~= nil) then -- need to figure out the empty ones but for now we'll ride through it.
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
             local l_cmd = string.format('\'New flow detected IP=%s DPORT=%s NF_MARK=%s\'', dst_IP, dport, flow_mark)
             logger(1, l_cmd )
+          else
+            logger(1, '\'No tag found\'')
           end
             fixconntrack(flow_mark, dst_IP, dport, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
