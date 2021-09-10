@@ -132,7 +132,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
-  in_table = 0
+  set_mark = 0
   if (flow_mark ~= nil) then
     for k, v in pairs(nf_mark) do
       if (flow_mark ~= k) then
@@ -145,15 +145,15 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
         local conn_str = conncheck:read('*all')
         if string.find(conn_str, "Warning\:") then
           logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
-          in_table = k
+          set_mark = k
         end
       end
     end
-  if (in_table == 0) then -- mark wasn't found in any ipsets
+  if (set_mark == 0) then -- mark wasn't found in any ipsets
     logger(1, 'Not found in ipsets...')
   elseif (mark_check == set_count) then -- do nothing
-  elseif (in_table ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
-    local set = nf_mark[in_table] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
+  elseif (set_mark ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
+    local set = nf_mark[set_mark] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
     flow_reset(dst_IP, dport, set, del_set)
   else
@@ -181,7 +181,8 @@ function nf_conntrack (nf_mark)
           dst_IP = (string.gsub(conn_arr [7], "dst%=", ""))
           dport = (string.gsub(conn_arr [9], "dport%=", ""))
           
-          if (pcall(string.gsub(conn_arr [15], "mark%=", "")) ~= nil) then -- need to figure out the empty ones but for now we'll ride through it.
+          logger(1, 'This connection has %s elements', #conn_arr)
+          if (#conn_arr == 15) then -- need to figure out the empty ones but for now we'll ride through it.
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
             local l_cmd = string.format('\'New flow detected IP=%s DPORT=%s NF_MARK=%s\'', dst_IP, dport, flow_mark)
             logger(1, l_cmd )
