@@ -188,7 +188,7 @@ function nf_conntrack (nf_mark)
           dport = (string.gsub(conn_arr [9], "dport%=", ""))
           
           conn_arr_count = tablelength(conn_arr)
-          logger(1, (string.format('This connection has %s elements', conn_arr_count))
+          logger(1, (string.format('This connection has %s elements', conn_arr_count)))
           if (conn_arr_count == 15) then -- need to figure out the empty ones but for now we'll ride through it.
             flow_mark = string.gsub(conn_arr [15], "mark%=", "")
             local l_cmd = string.format('\'New flow detected IP=%s DPORT=%s NF_MARK=%s\'', dst_IP, dport, flow_mark)
