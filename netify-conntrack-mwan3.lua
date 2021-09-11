@@ -162,7 +162,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   elseif (set_mark ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
     local set = nf_mark[set_mark] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
-    sleep(1)
+    sleep(5)
     flow_reset(dst_IP, dport, set, del_set)
   else
     logger(1, 'Found in correct set..')
