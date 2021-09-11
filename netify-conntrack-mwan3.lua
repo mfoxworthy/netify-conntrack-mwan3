@@ -128,27 +128,38 @@ function fetchmarks (policy, ipsets)
   return marks
 end
 
+
+function conn_check(set, dst_IP, dport)
+  local conncheckcmd = 'ipset test ' .. set .. ' ' .. dst_IP .. ',' .. dport .. ' 2>&1 | tee /tmp/set_e ; cat /tmp/set_e'
+  local conncheck = assert(io.popen(conncheckcmd, 'r'))
+  local conn_str = conncheck:read('*all')
+  conncheck(close)
+  logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, set))
+  if string.find(conn_str, "Warning\:") then
+    found = true
+  else
+    found = false
+  end
+  return found
+end
+
 -- Heavy lifter funtion to test all flows then call the reset helper that resets flows and add the ip to the correct set.
 -- If we have bugs, this is where we will find them :)
-
 
 function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   flow_mark = tonumber(flow_mark)
   mark_check = 0 -- There are more marks than those used for ipsets. We don't want false positives
   set_count = 0
   set_mark = 0
+  c_check = false
   if (flow_mark ~= nil) then
     for k, v in pairs(nf_mark) do
       if (flow_mark ~= k) then
         mark_check = mark_check + 1
       end
         set_count = set_count + 1
-        local conncheckcmd = 'ipset test ' .. v .. ' ' .. dst_IP .. ',' .. dport .. ' 2>&1 | tee /tmp/set_e ; cat /tmp/set_e'
-        local conncheck = assert(io.popen(conncheckcmd, 'r'))
-        logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, v))
-        local conn_str = conncheck:read('*all')
-        conncheck:close()
-        if string.find(conn_str, "Warning\:") then
+        c_check = conn_check(v, dst_IP, dport)
+        if (c_check = true) then
           logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
           set_mark = k
         end
