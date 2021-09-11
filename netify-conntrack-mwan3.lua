@@ -79,7 +79,7 @@ end
 -- Function to reset flow
 
 function flow_reset (dst_IP, dport, set, del_set)
-  local reset = 'conntrack -D -d ' .. dst_IP .. ' \>/dev/null 2\>\&1'
+  local reset = 'conntrack -D -d ' .. dst_IP .. ' >/dev/null 2>&1'
   sleep(3)
   os.execute(reset)
   logger(1, string.format('\'RESET connction for IP=%s DPORT=%s TO-SET=%s\'', dst_IP, dport, set))
@@ -133,7 +133,7 @@ function conn_check(set, dst_IP, dport)
   local conncheckcmd = 'ipset test ' .. set .. ' ' .. dst_IP .. ',' .. dport .. ' 2>&1 | tee /tmp/set_e ; cat /tmp/set_e'
   local conncheck = assert(io.popen(conncheckcmd, 'r'))
   local conn_str = conncheck:read('*all')
-  conncheck(close)
+  conncheck:close()
   logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, set))
   if string.find(conn_str, "Warning\:") then
     found = true
