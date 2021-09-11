@@ -80,9 +80,7 @@ end
 
 function flow_reset (dst_IP, dport, set, del_set)
   local reset = 'conntrack -D -d ' .. dst_IP .. ' \>/dev/null 2\>\&1'
-  --os.execute('ipset del -exist ' .. del_set .. ' ' .. dst_IP)
-  --os.execute('ipset add -exist ' .. set .. ' ' .. dst_IP)
-  sleep(1)
+  sleep(3)
   os.execute(reset)
   logger(1, string.format('\'RESET connction for IP=%s DPORT=%s TO-SET=%s\'', dst_IP, dport, set))
 end
@@ -162,7 +160,6 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
   elseif (set_mark ~= flow_mark) then -- compare the table mark with the mark found in the flow. if they don't match reset the flow.
     local set = nf_mark[set_mark] -- nf_mark is the mark configured in netfilter for a particular ipset. Source of truth.
     local del_set = nf_mark[flow_mark]
-    sleep(5)
     flow_reset(dst_IP, dport, set, del_set)
   else
     logger(1, 'Found in correct set..')
