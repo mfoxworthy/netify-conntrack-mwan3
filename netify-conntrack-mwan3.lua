@@ -159,7 +159,7 @@ function fixconntrack (flow_mark, dst_IP, dport, nf_mark)
       end
         set_count = set_count + 1
         c_check = conn_check(v, dst_IP, dport)
-        if (c_check = true) then
+        if (c_check == true) then
           logger(1, string.format('\'Found IP=%s DPORT=%s IPSET=%s NF_MARK=%s\'', dst_IP, dport, v, k))
           set_mark = k
         end
