@@ -212,7 +212,7 @@ function nf_conntrack (nf_mark)
             dst_IP = string.gsub(conn_arr [6], "dst%=", "")
           end
         else
-          logger(1, '\'Connection is not eligable for reset...\'')
+          logger(3, '\'Connection is not eligable for reset...\'')
         end
     end
   end
