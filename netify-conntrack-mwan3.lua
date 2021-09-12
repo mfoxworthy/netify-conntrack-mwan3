@@ -80,7 +80,7 @@ end
 
 function flow_reset (dst_IP, dport, set, del_set)
   local reset = 'conntrack -D -d ' .. dst_IP .. ' >/dev/null 2>&1'
-  sleep(3)
+  
   os.execute(reset)
   logger(1, string.format('\'RESET connction for IP=%s DPORT=%s TO-SET=%s\'', dst_IP, dport, set))
 end
