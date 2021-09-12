@@ -15,10 +15,9 @@ local loglvl_arr = {'loglvl1', 'loglvl2', 'loglvl3'}
 
 -- Lua doesn't have a built in sleep funtion so we build are own. Still figuring out if this is useful.
 
-function sleep (n)
-    local t = os.clock()
-    while os.clock() - t <= n do
-    end
+function sleep (s)
+    local timer = io.popen("sleep " .. s)
+    timer:close()
 end
 
 --Logging logic. Probably find a logging lib somewhere and replace.
@@ -80,7 +79,7 @@ end
 
 function flow_reset (dst_IP, dport, set, del_set)
   local reset = 'conntrack -D -d ' .. dst_IP .. ' >/dev/null 2>&1'
-  
+  sleep(2)
   os.execute(reset)
   logger(1, string.format('\'RESET connction for IP=%s DPORT=%s TO-SET=%s\'', dst_IP, dport, set))
 end
