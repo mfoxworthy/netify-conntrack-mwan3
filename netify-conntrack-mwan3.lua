@@ -79,7 +79,6 @@ end
 
 function flow_reset (dst_IP, dport, set, del_set)
   local reset = 'conntrack -D -d ' .. dst_IP .. ' >/dev/null 2>&1'
-  sleep(2)
   os.execute(reset)
   logger(1, string.format('\'RESET connction for IP=%s DPORT=%s TO-SET=%s\'', dst_IP, dport, set))
 end
@@ -204,6 +203,7 @@ function nf_conntrack (nf_mark)
           else
             logger(1, '\'No tag found\'')
           end
+          sleep(5)
           fixconntrack(flow_mark, dst_IP, dport, nf_mark)
         elseif (status == "NEW" and conn_arr [2] == "udp") then-- pick off UDP
           if (string.gsub(conn_arr [8], "dport%=", "") ~= ("53" or "68" or "67")) then -- ommit local UDP. Need a better fuction for this.
