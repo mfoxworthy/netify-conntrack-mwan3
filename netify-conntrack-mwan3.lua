@@ -133,7 +133,7 @@ function conn_check(set, dst_IP, dport)
   local conn_str = conncheck:read('*all')
   conncheck:close()
   logger(1, string.format('\'Checking IP=%s DPORT=%s in set %s\'', dst_IP, dport, set))
-  if string.find(conn_str, "Warning\:") then
+  if string.find(conn_str, "Warning:") then
     found = true
   else
     found = false
